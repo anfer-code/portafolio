@@ -1,26 +1,103 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #2A2A2A;
+  --surface: #170B28;
+  --main-text: #1A1A1A;
+  --secondary-text: #2A2A2A;
+  --accent: #F5F5F2;
+  --accent-text: #1A1A1A;
+  --border: #ffffff1f;
+  --glass: #ffffff43;
 }
+
+.dark {
+  --background: #2A2A2A;
+  --surface: #170B28;
+  --main-text: #f5f3ff;
+  --secondary-text: #a6a0c3;
+  --accent: #633B9A;
+  --accent-text: #ffffff;
+  --border: #ffffff1f;
+}
+
 
 @theme inline {
   --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-main-text: var(--main-text);
+  --color-secondary-text: var(--secondary-text);
+  --color-accent: var(--accent);
+  --color-accent-text: var(--accent-text);
+  --color-border: var(--border);
+  --color-glass: var(--glass);
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-comic: var(--font-mondwest-raw);
+  --font-comic-bold: var(--font-neuebit-raw);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
 
 body {
   background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--main-text);
+  font-family: var(--font-geist-sans), sans-serif;
+}
+
+@custom-variant dark (&:is(.dark, .dark *));
+
+@utility glass {
+  backdrop-filter: blur(15px);
+  box-shadow:
+    inset 0px 1.5px 2px 0px rgb(255 255 255 / 30%),
+    inset 0 -2px 4px 0 #75757533;
+  border-width: 0.4px;
+  border-color: #ffffff1a;
+  filter: brightness(1);
+  transition: filter 0.2s ease;
+
+  &:hover {
+    filter: brightness(1.08);
+  }
+}
+
+@keyframes float-right {
+  from {
+    transform: translateX(-30vw);
+  }
+  to {
+    transform: translateX(110vw);
+  }
+}
+
+@keyframes float-left {
+  from {
+    transform: translateX(110vw);
+  }
+  to {
+    transform: translateX(-30vw);
+  }
+}
+
+@utility animate-float-right {
+  animation: float-right 70s linear infinite;
+}
+
+@utility animate-float-left {
+  animation: float-left 70s linear infinite;
+}
+
+/* Recorte cóncavo en la esquina inferior derecha (para anidar el botón).
+   La máscara pinta el elemento como visible (negro) excepto un círculo
+   transparente centrado en (100% - x, 100% - y): ese círculo "desaparece". */
+@utility notch-br {
+  --notch-r: 60px;
+  --notch-x: 40px;
+  --notch-y: 40px;
+  -webkit-mask: radial-gradient(
+    circle var(--notch-r) at calc(100% - var(--notch-x))
+      calc(100% - var(--notch-y)),
+    transparent 98%,
+    #000 100%
+  );
+  mask: radial-gradient(circle var(--notch-r) at calc(100% - var(--notch-x)) calc(100% - var(--notch-y)), transparent 98%, #000 100%)
 }
