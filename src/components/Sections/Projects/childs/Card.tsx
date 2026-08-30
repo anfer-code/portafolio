@@ -1,10 +1,22 @@
 import { ArrowIcon } from "@/components/icons/ArrowIcon";
 import { ThemeImage } from "@/components/ThemeImage/ThemeImage";
 import type { Project } from "@/data/projects";
+import Link from "next/link";
 
-export const Card = ({ title, imageLight, imageDark, href, glow }: Project) => (
-  <a
-    href={href}
+type CardProps = Pick<
+  Project,
+  "slug" | "title" | "imageLight" | "imageDark" | "glow"
+>;
+
+export const Card = ({
+  slug,
+  title,
+  imageLight,
+  imageDark,
+  glow,
+}: CardProps) => (
+  <Link
+    href={`/proyectos/${slug}`}
     className="group glass relative flex flex-col overflow-hidden rounded-2xl bg-[#68686833] transition-[transform,filter] duration-300 hover:-translate-y-1"
   >
     <h3 className="px-6 pt-6 text-xl font-bold text-main-text">{title}</h3>
@@ -39,5 +51,5 @@ export const Card = ({ title, imageLight, imageDark, href, glow }: Project) => (
         </span>
       </div>
     </div>
-  </a>
+  </Link>
 );

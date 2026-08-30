@@ -6,6 +6,8 @@ import { Cta } from "@/components/Sections/Cta/Cta";
 import { Experience } from "@/components/Sections/Experience/Experience";
 import { Projects } from "@/components/Sections/Projects/Projects";
 import { Stack } from "@/components/Sections/Stack/Stack";
+import { LinesArea } from "@/components/LinesArea/LinesArea";
+import { SkyArea } from "@/components/SkyArea/SkyArea";
 
 export default function Home() {
   return (
@@ -13,11 +15,17 @@ export default function Home() {
       <Header />
       <Hero />
       <Projects />
-      <About />
-      <Stack />
-      <Experience />
-      <Cta />
-      <Footer />
+      {/* Sobre mí y Stack comparten el mismo fondo de cuadrícula */}
+      <LinesArea>
+        <About />
+        <Stack />
+      </LinesArea>
+      {/* Experiencia, contacto y footer comparten un mismo cielo continuo */}
+      <SkyArea>
+        <Experience />
+        <Cta />
+        <Footer />
+      </SkyArea>
     </>
   );
 }

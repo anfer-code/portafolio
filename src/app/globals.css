@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 :root {
+  --main-bg: #FCEBC1;
   --background: #2A2A2A;
   --surface: #170B28;
   --main-text: #1A1A1A;
@@ -12,6 +13,7 @@
 }
 
 .dark {
+  --main-bg: #1D1E30;
   --background: #2A2A2A;
   --surface: #170B28;
   --main-text: #f5f3ff;
@@ -34,13 +36,28 @@
   --font-sans: var(--font-geist-sans);
   --font-comic: var(--font-mondwest-raw);
   --font-comic-bold: var(--font-neuebit-raw);
+  --font-press-start: var(--font-press-start-raw);
 }
 
 
 body {
-  background: var(--background);
+  background: var(--main-bg);
   color: var(--main-text);
   font-family: var(--font-geist-sans), sans-serif;
+}
+
+/* El header es fijo: al saltar a un ancla, deja aire para que el título
+   de la sección no quede oculto detrás de él. */
+html {
+  scroll-padding-top: 9rem;
+  scroll-behavior: smooth;
+}
+
+/* Respeta a quien pidió menos animación en su sistema. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 @custom-variant dark (&:is(.dark, .dark *));
@@ -55,8 +72,14 @@ body {
   filter: brightness(1);
   transition: filter 0.2s ease;
 
+  /* En claro se oscurece y en oscuro se aclara: subir el brillo de una
+     superficie ya clara la lava y se ve deslavada. */
   &:hover {
-    filter: brightness(1.08);
+    filter: brightness(0.96);
+  }
+
+  .dark &:hover {
+    filter: brightness(1.12);
   }
 }
 
@@ -84,6 +107,180 @@ body {
 
 @utility animate-float-left {
   animation: float-left 70s linear infinite;
+}
+
+/* Flote idle del personaje (sube y baja suavemente). */
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@utility animate-bob {
+  animation: bob 3s ease-in-out infinite;
+}
+
+/* Giro tipo moneda sobre el eje Y (el slot aporta la perspectiva). */
+@keyframes icon-flip {
+  0%,
+  60%,
+  100% {
+    transform: rotateY(0deg);
+  }
+  30% {
+    transform: rotateY(180deg);
+  }
+}
+
+@utility animate-icon-flip {
+  animation: icon-flip 4s ease-in-out infinite;
+}
+
+/* Mismo flip, pero el eje de giro es la diagonal "/" (abajo-izq → arriba-der).
+   rotate3d(x, y, z, ángulo) gira alrededor del vector dado: (1, -1, 0) apunta
+   a la derecha y hacia arriba (en CSS el eje Y crece hacia abajo). */
+@keyframes icon-flip-diagonal {
+  0%,
+  60%,
+  100% {
+    transform: rotate3d(1, -1, 0, 0deg);
+  }
+  30% {
+    transform: rotate3d(1, -1, 0, 180deg);
+  }
+}
+
+/* Estrella: gira cada tanto. Arranca lento, da varias vueltas y frena
+   suave (el easing va en el tramo 65%→100%; el resto del ciclo es reposo).
+   1080deg = 3 vueltas exactas, así el reinicio no se nota. */
+@keyframes star-spin {
+  0%,
+  65% {
+    transform: rotateY(0deg);
+  }
+  100% {
+    transform: rotateY(1080deg);
+  }
+}
+
+@utility animate-star-spin {
+  animation: star-spin 9s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+}
+
+/* Carrusel vertical infinito: la lista se duplica y se desplaza -50%,
+   justo el alto de una copia, por eso el bucle es imperceptible. */
+@keyframes marquee-y {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+/* Variante horizontal del carrusel, para cuando el carril va en fila. */
+@keyframes marquee-x {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@utility animate-marquee-x {
+  animation: marquee-x 18s linear infinite;
+}
+
+@utility animate-marquee-y {
+  animation: marquee-y 18s linear infinite;
+}
+
+/* Notas: leve balanceo, como si colgaran del pin (de ahí el origin arriba). */
+@keyframes note-sway {
+  0%,
+  100% {
+    transform: rotate(-1.2deg);
+  }
+  50% {
+    transform: rotate(1.2deg);
+  }
+}
+
+@utility animate-note-sway {
+  transform-origin: 80% 8%;
+  animation: note-sway 4s ease-in-out infinite;
+}
+
+/* Llave: da una vuelta completa en el plano (arriba → derecha → abajo →
+   izquierda → arriba) y al cerrar el giro rebota un momento antes de asentarse. */
+@keyframes key-turn {
+  0%,
+  55% {
+    transform: rotate(0deg);
+  }
+  80% {
+    transform: rotate(360deg);
+  }
+  87% {
+    transform: rotate(374deg);
+  }
+  94% {
+    transform: rotate(352deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@utility animate-icon-turn {
+  animation: key-turn 5s ease-in-out infinite;
+}
+
+@utility animate-icon-diagflip {
+  animation: icon-flip-diagonal 4s ease-in-out infinite;
+}
+
+/* Reduce el suavizado del navegador al escalar: sin esto el pixel art
+   escalado (moneda, trofeo, insignias) se ve borroso. */
+@utility pixelated {
+  image-rendering: pixelated;
+}
+
+/* Moneda del marcador. El sprite trae los 8 cuadros del giro en una fila, así
+   que el fondo se desplaza en pasos exactos de un cuadro: `steps(8)` nunca
+   llega a -8 (que sería otra vez el cuadro 0), por eso el bucle no salta. */
+@keyframes coin-spin {
+  to {
+    background-position-x: calc(var(--coin-size) * -8);
+  }
+}
+
+@utility coin {
+  --coin-size: 1.5rem;
+  width: var(--coin-size);
+  height: var(--coin-size);
+  background-image: url("/img/coin-sprite.png");
+  background-size: calc(var(--coin-size) * 8) var(--coin-size);
+  image-rendering: pixelated;
+  animation: coin-spin 1.2s steps(8) infinite;
+}
+
+/* Máscara con la forma del círculo pixel (profile-bg): recorta al personaje
+   a la silueta del círculo. La máscara va en un contenedor estático y el
+   personaje flota dentro. `-webkit-mask` para Safari. */
+@utility profile-mask {
+  -webkit-mask: url("/img/light/profile-bg.png") center / contain no-repeat;
+  mask: url("/img/light/profile-bg.png") center / contain no-repeat;
+}
+
+@utility profile-mask-dark {
+  -webkit-mask-image: url("/img/dark/profile-bg.png");
+  mask-image: url("/img/dark/profile-bg.png");
 }
 
 /* Recorte cóncavo en la esquina inferior derecha (para anidar el botón).

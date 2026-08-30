@@ -25,6 +25,12 @@ const ppNeueBit = localFont({
   display: "swap",
 });
 
+const pressStart = localFont({
+  src: "./fonts/pressStart2P.woff2",
+  variable: "--font-press-start-raw",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Anfernee Valera — Frontend Engineer",
   description: "Portafolio de Anfernee Valera, Frontend Engineer.",
@@ -38,7 +44,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${ppMondwest.variable} ${ppNeueBit.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${ppMondwest.variable} ${ppNeueBit.variable} ${pressStart.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

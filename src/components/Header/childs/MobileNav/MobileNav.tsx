@@ -5,7 +5,12 @@ import { MenuIcon } from "@/components/icons/MenuIcon";
 import { menuItems } from "@/data/nav";
 import { useState } from "react";
 
-export const MobileNav = () => {
+type MobileNavProps = {
+  /** Ver `navBase` en `Header`. */
+  navBase?: string;
+};
+
+export const MobileNav = ({ navBase = "" }: MobileNavProps) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -28,7 +33,7 @@ export const MobileNav = () => {
           {menuItems.map((item) => (
             <li key={item.name}>
               <a
-                href={item.href}
+                href={`${navBase}${item.href}`}
                 onClick={() => setOpen(false)}
                 className="block rounded-md px-4 py-3 font-bold text-main-text capitalize transition-opacity hover:opacity-60"
               >

@@ -18,14 +18,17 @@ export const ToggleHeader = () => {
 
   return (
     <button
-      className="bg-glass glass h-14 w-15 rounded-lg flex items-center justify-center"
+      className="h-14 w-15 flex items-center justify-center"
       onClick={toogleTheme}
       aria-label="Cambiar tema"
     >
+      {/* Los assets vienen con el color contrario al que toca en cada tema
+          (la nube es blanca y el sol negro), así que se invierten. */}
       <Image
+        className="invert"
         width={20}
         height={20}
-        src={isDark ? "/cloud.svg" : "/sun.svg"}
+        src={isDark ? "/sun.svg" : "/cloud.svg"}
         alt=""
       />
     </button>

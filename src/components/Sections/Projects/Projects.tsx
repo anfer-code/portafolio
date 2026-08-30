@@ -1,6 +1,6 @@
+import { Clouds } from "@/components/Clouds/Clouds";
 import { projects } from "@/data/projects";
 import { Card } from "./childs/Card";
-import { Clouds } from "./childs/Clouds";
 
 export const Projects = () => (
   <section
@@ -12,11 +12,12 @@ export const Projects = () => (
     <div className="relative z-10 mx-auto max-w-6xl px-6">
       <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
         <h2 className="max-w-md font-comic text-4xl text-main-text sm:text-5xl">
-          Proyectos en los que Lorem Ipsum
+          Proyectos en los que he trabajado
         </h2>
         <p className="max-w-sm text-secondary-text">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis lacus
-          nunc, posuere in justo vulputate, bibendum sodales
+          Cada proyecto me dejó algo: una técnica nueva, un problema que no
+          había resuelto antes o una forma distinta de pensar el front-end.
+          Estos son algunos de los que más disfruté construir.
         </p>
       </div>
 
