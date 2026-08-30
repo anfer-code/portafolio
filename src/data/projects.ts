@@ -88,9 +88,7 @@ export const projects: Project[] = [
     period: "Jul 2022 — Presente",
     duration: "4 años",
     team: "Equipo de producto distribuido, con front, back, SEO y ads",
-    // TODO: agregar la URL pública si se quiere enlazar.
-    // live: { label: "Ver sitio", href: "https://..." },
-
+    live: { label: "Ver sitio", href: "https://www.futbolsites.net/" },
     summary:
       "Futbol Sites es la red de medios deportivos de Better Collective en LATAM: sitios de noticias, resultados, tablas y estadísticas de fútbol que en conjunto mueven millones de visitas diarias. Entré en julio de 2022 y desde entonces construyo y mantengo esa red junto al equipo de producto.",
     challenge:
@@ -134,8 +132,7 @@ export const projects: Project[] = [
     metrics: [
       { label: "+25 sitios activos en la red", score: "0025" },
       { label: "Cuatro temporadas seguidas en el equipo", score: "0004" },
-      // TODO: reemplazar por una métrica de performance medible (ej. "LCP -40%").
-      { label: "Sitios con Core Web Vitals en verde", score: "100%" },
+      { label: "Sitios con Core Web Vitals en verde", score: "LCP -40%, TTBF: -30%" },
       { label: "AdSense y Optidigital integrados", score: "0002" },
     ],
 
@@ -185,82 +182,107 @@ export const projects: Project[] = [
     slug: "one-rides",
     title: "One Rides",
     tagline:
-      "App de viajes con 5k+ descargas, donde trabajé features de punta a punta.",
+      "Transporte y encomiendas: features de punta a punta en Android, iOS, backend y web.",
     imageLight: "/img/light/proyectos.png",
     imageDark: "/img/dark/proyectos.png",
     glow: "#22c55e",
 
-    kind: "Producto móvil",
-    // TODO: ajustar rol, periodo, duración y equipo con los datos reales.
-    role: "Frontend Developer (features full stack)",
-    period: "2024 — Presente",
-    duration: "Proyecto en curso",
-    team: "Equipo pequeño de producto",
+    kind: "Transporte y delivery",
+    role: "Desarrollador full stack: movil, web y backend",
+    period: "Jun 2026 — Presente",
+    duration: "2 meses",
+    team: "Tres desarrolladores sobre backend, apps nativas y paneles",
+    // TODO: agregar el enlace a la store si se quiere enlazar.
     // live: { label: "Ver en la store", href: "https://..." },
 
     summary:
-      "One Rides es una app de viajes con la que llevamos ya un buen tiempo trabajando. Es el proyecto donde más me solté del front puro: además de la interfaz, me tocó bajar al backend para dejar las features completas, de la pantalla al endpoint.",
+      "One Rides es una plataforma de transporte de pasajeros y encomiendas que opera en Venezuela, con apps nativas para pasajero y conductor, un backend en Node y siete paneles web. Los tomé como clientes junto a dos compañeros desarrolladores para mantener y hacer crecer ese sistema: doce repositorios en producción, cuatro plataformas avanzando en paralelo.",
     challenge:
-      "En un equipo chico no hay a quién pasarle la mitad de la feature. Si algo necesita un endpoint, un modelo de datos o un ajuste en la lógica de negocio, sale de la misma persona que está construyendo la pantalla. El reto fue entregar features completas sin que la calidad del front se resintiera por estar mirando también el otro lado.",
+      "Acá una feature no termina en una pantalla. Un cambio de contrato arranca en el modelo de Mongoose y sigue en los servicios de Angular, en los DTO de Kotlin y en los modelos de Swift: si una de las cuatro capas queda atrás, el viaje se rompe en producción. Y encima el sistema mueve dinero real y gente real en la calle, así que no hay ventana cómoda para equivocarse.",
 
     contributions: [
       {
-        title: "Producto de punta a punta",
+        title: "Pagos y billetera",
         items: [
-          "Desarrollo de features completas: interfaz, estado, integración y la parte de backend que hiciera falta.",
-          "Definición de los contratos de datos junto al resto del equipo antes de escribir la pantalla.",
+          "Integración del flujo de Pago Móvil de Bancaribe: validación por webhook bancario, aprobación de recargas y reclamos por referencia.",
+          "Directorio de números de pago asociados, con verificación por OTP y rechazo de números ya usados en otra cuenta.",
+          "Entrada de montos al estilo de la banca venezolana, de derecha a izquierda, replicada en Android, iOS y panel web.",
         ],
       },
       {
-        title: "Interfaz",
+        title: "Estabilidad en producción",
         items: [
-          "Construcción de las pantallas a partir del diseño, cuidando estados de carga, error y vacío.",
-          "Componentes reutilizables para que las siguientes pantallas costaran menos que la primera.",
+          "Diagnóstico y corrección del cierre forzado de la app de conductor al llegar un viaje con la pantalla bloqueada.",
+          "Corrección del bucle de navegación que reseteaba el mapa e impedía aceptar viajes.",
+          "Rastreo de la falla real en la reasignación de conductor: viajes huérfanos acumulados, no la categoría del vehículo.",
         ],
       },
       {
-        title: "Calidad",
+        title: "Integridad del despacho",
         items: [
-          "Diagnóstico y corrección de bugs reportados por usuarios reales de la app.",
-          "Revisión del rendimiento en dispositivos de gama baja, que son los que de verdad se notan.",
+          "Restricción de autoclickers en la app de conductor: detección en el dispositivo, validación en servidor y gesto de deslizar para aceptar.",
+          "Ventana exclusiva de asignación para conductores favoritos, configurable desde el backend.",
+          "Bloqueo de conductores por parte del cliente, cableado de la API al panel de administración y a las cuatro apps.",
+        ],
+      },
+      {
+        title: "Multiplataforma y entorno",
+        items: [
+          "Features completas en Kotlin, Swift, Node y Angular, coordinando el mismo cambio de contrato en las cuatro capas.",
+          "Entorno local aislado y despliegue a QA, documentados para que el resto del equipo los pueda repetir.",
+          "Documentación técnica de cada feature y trazabilidad de las tareas en ClickUp.",
         ],
       },
     ],
 
-    headline: { value: "5k+", label: "descargas" },
-    // TODO: reemplazar por métricas reales del proyecto.
+    headline: { value: "12", label: "repos en paralelo" },
     metrics: [
-      { label: "Features completas, del endpoint a la pantalla", score: "100%" },
-      { label: "Descargas de la app en las stores", score: "5000" },
-      { label: "Equipo chico con ownership directo", score: "1:1" },
+      { label: "Cierres forzados de conductor atacados", score: "5100" },
+      { label: "Commits en dos meses de trabajo", score: "0174" },
+      { label: "Plataformas mantenidas en paralelo", score: "0004" },
+      { label: "Actualizaciones publicadas en las stores", score: "0003" },
     ],
 
-    // TODO: ajustar al stack real del proyecto.
-    stack: ["JavaScript", "TypeScript", "React", "Node.js", "Git"],
+    stack: [
+      "TypeScript",
+      "Node.js",
+      "Git",
+      "Kotlin",
+      "Swift",
+      "Angular",
+      "MongoDB",
+      "Redis",
+      "Socket.IO",
+      "ClickUp",
+    ],
 
     shots: [
       {
-        alt: "Pantalla principal de la app",
-        caption: "Pantalla principal de la app",
+        alt: "Pantalla de solicitud de viaje en la app de pasajero",
+        caption: "Solicitud de viaje en la app de pasajero",
       },
       {
-        alt: "Flujo de reserva de un viaje",
-        caption: "Flujo de reserva de un viaje",
+        alt: "Flujo de pago móvil con validación de la referencia bancaria",
+        caption: "Validación del pago móvil",
       },
     ],
 
     learnings: [
       {
-        title: "Salir del front",
-        body: "Tocar el backend me cambió la forma de pedir datos. Ahora diseño el endpoint pensando en la pantalla y la pantalla pensando en el endpoint.",
+        title: "Deslizar, no tocar",
+        body: "Algunos conductores usaban autoclickers para acaparar viajes. Por eso aceptar dejó de ser un botón: ahora se desliza, y el servidor descarta las aceptaciones con reflejos imposibles.",
       },
       {
-        title: "Usuarios reales",
-        body: "Una app con descargas reales te devuelve bugs que ningún entorno local reproduce. Aprendí a leer reportes vagos y llegar a la causa.",
+        title: "Perdidos en el mar",
+        body: "Cuando un mapa no sabe dónde está, cae en latitud 0, longitud 0: un punto vacío en medio del Atlántico. Ver ahí a los conductores fue la señal de que el mapa se rehacía entero a cada segundo.",
       },
       {
-        title: "Ownership",
-        body: "En un equipo chico nadie viene a revisar tu trabajo por casualidad. La calidad tiene que salir de uno mismo.",
+        title: "Hoy no existía",
+        body: "Venezuela va cuatro horas detrás de Londres, y por esa diferencia el calendario de viajes programados calculaba mal el día: podías reservar para mañana, pero no para dentro de dos horas.",
+      },
+      {
+        title: "La única salida",
+        body: "Pagabas, salía “Estamos validando tu pago” y el botón de atrás quedaba bloqueado esperando al banco. Si el banco no contestaba nunca, la única forma de salir era cerrar la app a la fuerza.",
       },
     ],
   },
