@@ -12,6 +12,8 @@ type AbilityProps = {
   /** Desfase para que los íconos no se muevan sincronizados. */
   delay?: string;
   type?: PageType;
+  /** Ajuste del alto del dibujo: los PNG recortados no comparten proporcion. */
+  iconSize?: string;
 };
 
 // Cada bracket: posición de esquina (offset negativo = 4px afuera del slot).
@@ -39,6 +41,7 @@ export const Ability = ({
   animation,
   delay = "0s",
   type = PageType.DEFAULT,
+  iconSize = "size-5.5",
 }: AbilityProps) => (
   <div
     className={`relative flex size-9.5 shrink-0 items-center justify-center bg-contain bg-center bg-no-repeat [perspective:200px] ${SLOT_BACKGROUNDS[type]}`}
@@ -48,7 +51,7 @@ export const Ability = ({
       alt=""
       width={34}
       height={34}
-      className={`object-contain size-5.5 ${ANIMATIONS[animation]}`}
+      className={`object-contain ${iconSize} ${ANIMATIONS[animation]}`}
       style={{ animationDelay: delay }}
     />
 
