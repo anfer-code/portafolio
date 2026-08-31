@@ -1,48 +1,116 @@
 "use client";
 
+import { Clouds } from "@/components/Clouds/Clouds";
 import { CloseIcon } from "@/components/icons/CloseIcon";
 import { MenuIcon } from "@/components/icons/MenuIcon";
 import { menuItems } from "@/data/nav";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type MobileNavProps = {
   /** Ver `navBase` en `Header`. */
   navBase?: string;
 };
 
+/**
+ * Menú móvil a pantalla completa.
+ *
+ * Antes era un desplegable anclado al botón con `absolute right-0`, pero el
+ * header está centrado: el panel abierto quedaba corrido a la izquierda
+ * mientras los controles seguían en el medio, y sin fondo propio se
+ * transparentaba el contenido de la página. A pantalla completa no hay nada a
+ * lo que alinearse, así que ese problema desaparece de raíz.
+ *
+ * Usa el mismo `<dialog>` nativo que el resto del sitio: trae cierre con
+ * Escape, foco atrapado y bloqueo del scroll de fondo sin una sola línea de JS.
+ */
 export const MobileNav = ({ navBase = "" }: MobileNavProps) => {
+  const dialogRef = useRef<HTMLDialogElement>(null);
   const [open, setOpen] = useState(false);
+  // Remonta la lista en cada apertura para que la animación escalonada vuelva
+  // a correr; si no, solo se vería la primera vez.
+  const [aperturas, setAperturas] = useState(0);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    // Escape cierra por su cuenta, sin avisarle a React: hay que escuchar el
+    // evento nativo o `aria-expanded` queda mintiendo.
+    const onClose = () => setOpen(false);
+    dialog.addEventListener("close", onClose);
+    return () => dialog.removeEventListener("close", onClose);
+  }, []);
+
+  const abrir = () => {
+    setAperturas((n) => n + 1);
+    setOpen(true);
+    dialogRef.current?.showModal();
+  };
+
+  const cerrar = () => dialogRef.current?.close();
 
   return (
-    <div className="relative md:hidden">
+    <div className="md:hidden">
       <button
-        onClick={() => setOpen((prev) => !prev)}
-        aria-label={open ? "Cerrar menú" : "Abrir menú"}
+        type="button"
+        onClick={abrir}
+        aria-label="Abrir menú"
         aria-expanded={open}
-        className="bg-glass glass flex size-14 items-center justify-center rounded-lg text-main-text"
+        aria-haspopup="dialog"
+        className="bg-glass glass flex size-14 cursor-pointer items-center justify-center rounded-lg text-main-text"
       >
-        {open ? (
-          <CloseIcon className="size-6" />
-        ) : (
-          <MenuIcon className="size-6" />
-        )}
+        <MenuIcon className="size-6" />
       </button>
 
-      {open && (
-        <ul className="bg-glass glass absolute top-16 right-0 flex min-w-44 flex-col gap-1 rounded-lg p-2">
-          {menuItems.map((item) => (
-            <li key={item.name}>
+      {/* Los `max-*-none` y el `m-0` desarman los topes que el navegador le
+          pone a todo <dialog>; sin ellos no llega a ocupar la pantalla.
+          `h-dvh` y no `h-screen`: en móvil la barra de direcciones se esconde
+          al desplazar y `100vh` deja un salto al pie. */}
+      <dialog
+        ref={dialogRef}
+        aria-label="Menú de navegación"
+        className="m-0 h-dvh max-h-none w-screen max-w-none bg-transparent p-0 backdrop:bg-transparent"
+      >
+        <div className="relative flex h-full w-full flex-col overflow-hidden bg-[url('/img/light/small-bg.png')] bg-cover bg-center dark:bg-[url('/img/dark/small-bg.png')]">
+          <Clouds />
+
+          {/* Velo tenue sobre el cielo: las nubes siguen ahí pero dejan de
+              competir con los enlaces. */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 bg-white/25 dark:bg-[#171341]/40"
+          />
+
+          {/* A la altura del header, para que el cierre caiga donde el pulgar
+              ya estaba al abrirlo. */}
+          <div className="relative z-10 flex justify-end px-4 pt-19">
+            <button
+              type="button"
+              onClick={cerrar}
+              aria-label="Cerrar menú"
+              className="bg-glass glass flex size-14 cursor-pointer items-center justify-center rounded-lg text-main-text"
+            >
+              <CloseIcon className="size-6" />
+            </button>
+          </div>
+
+          <nav
+            key={aperturas}
+            className="relative z-10 flex flex-1 flex-col items-center justify-center gap-4 pb-24"
+          >
+            {menuItems.map((item, i) => (
               <a
+                key={item.name}
                 href={`${navBase}${item.href}`}
-                onClick={() => setOpen(false)}
-                className="block rounded-md px-4 py-3 font-bold text-main-text capitalize transition-opacity hover:opacity-60"
+                onClick={cerrar}
+                style={{ animationDelay: `${i * 0.07}s` }}
+                className="animate-menu-in font-comic text-5xl text-main-text capitalize transition-transform duration-200 active:scale-95 motion-reduce:animate-none"
               >
                 {item.name}
               </a>
-            </li>
-          ))}
-        </ul>
-      )}
+            ))}
+          </nav>
+        </div>
+      </dialog>
     </div>
   );
 };
