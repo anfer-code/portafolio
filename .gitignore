@@ -42,3 +42,6 @@ next-env.d.ts
 
 # Audio original sin optimizar (no se despliega)
 /audio-source
+
+# La plantilla de variables si va al repo: no tiene secretos, solo los nombres.
+!.env.example

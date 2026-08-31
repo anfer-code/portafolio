@@ -44,20 +44,23 @@ export const ProjectImpact = ({ headline, metrics }: ProjectImpactProps) => (
           {metrics.map(({ label, score }, i) => (
             <li
               key={label}
-              className="glass flex flex-1 items-center justify-between gap-5 rounded-xl bg-glass px-6 py-5"
+              // `flex-wrap` mas `min-w-0` en las dos mitades: si algun score se
+              // pasa del formato corto de marcador, baja de linea en vez de
+              // estirar la fila y sacarle scroll horizontal a toda la pagina.
+              className="glass flex flex-1 flex-wrap items-center justify-between gap-x-5 gap-y-3 rounded-xl bg-glass px-6 py-5"
             >
-              <span className="font-press-start text-[10px] leading-relaxed tracking-wider text-main-text uppercase">
+              <span className="min-w-0 font-press-start text-[10px] leading-relaxed tracking-wider text-main-text uppercase">
                 {label}
               </span>
 
-              <span className="flex shrink-0 items-center gap-3">
+              <span className="flex min-w-0 items-center gap-3">
                 {/* Las monedas se desfasan para que no giren todas a la vez */}
                 <span
                   aria-hidden="true"
-                  className="coin"
+                  className="coin shrink-0"
                   style={{ animationDelay: `${i * 0.15}s` }}
                 />
-                <span className="font-press-start text-sm text-main-text">
+                <span className="font-press-start text-sm break-words text-main-text">
                   {score}
                 </span>
               </span>

@@ -1,5 +1,7 @@
 type ButtonProps = {
-  href: string;
+  /** Con `href` sale un enlace; sin el, un `<button>` que dispara `onClick`. */
+  href?: string;
+  onClick?: () => void;
   children: React.ReactNode;
   icon?: React.ReactNode;
   iconPosition?: "start" | "end";
@@ -25,6 +27,7 @@ const variantStyles = {
 
 export const Button = ({
   href,
+  onClick,
   children,
   icon,
   iconPosition = "start",
@@ -34,17 +37,32 @@ export const Button = ({
   bgClass,
 }: ButtonProps) => {
   const { base, bg } = variantStyles[variant];
+  const classes = `inline-flex items-center gap-2 font-medium ${base} ${bgClass ?? bg} ${className}`;
+
+  const content = (
+    <>
+      {icon && iconPosition === "start" && icon}
+      {children}
+      {icon && iconPosition === "end" && icon}
+    </>
+  );
+
+  if (!href) {
+    return (
+      <button type="button" onClick={onClick} className={`${classes} cursor-pointer`}>
+        {content}
+      </button>
+    );
+  }
 
   return (
     <a
       href={href}
       target={external ? "_blank" : undefined}
       rel={external ? "noopener noreferrer" : undefined}
-      className={`inline-flex items-center gap-2 font-medium ${base} ${bgClass ?? bg} ${className}`}
+      className={classes}
     >
-      {icon && iconPosition === "start" && icon}
-      {children}
-      {icon && iconPosition === "end" && icon}
+      {content}
     </a>
   );
 };

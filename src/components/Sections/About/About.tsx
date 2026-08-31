@@ -1,5 +1,5 @@
 import { LinkedinButton } from "@/components/Buttons/LinkedinButton";
-import { MailButton } from "@/components/Buttons/MailButton";
+import { ContactDialog } from "@/components/ContactDialog/ContactDialog";
 import { CharacterCard } from "./childs/CharacterCard/CharacterCard";
 
 export const About = () => {
@@ -27,8 +27,7 @@ export const About = () => {
                 bgClass="bg-[#DAAD72] dark:bg-[#171C68]"
                 className="w-full justify-center sm:w-auto sm:justify-start"
               />
-              <MailButton
-                href="mailto:anfervalera11@gmail.com"
+              <ContactDialog
                 variant="filled"
                 className="w-full justify-center sm:w-auto sm:justify-start"
               />

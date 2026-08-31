@@ -2,18 +2,21 @@ import { MailIcon } from "@/components/icons/MailIcon";
 import { Button } from "./Button";
 
 type MailButtonProps = {
-  href: string;
+  href?: string;
+  onClick?: () => void;
   className?: string;
   variant?: "filled" | "outline";
 };
 
 export const MailButton = ({
   href,
+  onClick,
   className = "",
   variant = "outline",
 }: MailButtonProps) => (
   <Button
     href={href}
+    onClick={onClick}
     variant={variant}
     iconPosition="start"
     className={className}

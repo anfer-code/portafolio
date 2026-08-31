@@ -1,5 +1,5 @@
 import { LinkedinButton } from "@/components/Buttons/LinkedinButton";
-import { MailButton } from "@/components/Buttons/MailButton";
+import { ContactDialog } from "@/components/ContactDialog/ContactDialog";
 
 export const Cta = () => (
   <section id="contacto" className="px-6 py-16">
@@ -19,8 +19,7 @@ export const Cta = () => (
           bgClass="bg-[#DAAD72] dark:bg-[#171C68]"
           className="w-full justify-center sm:w-auto"
         />
-        <MailButton
-          href="mailto:anfervalera11@gmail.com"
+        <ContactDialog
           variant="filled"
           className="w-full justify-center sm:w-auto"
         />

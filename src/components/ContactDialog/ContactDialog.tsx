@@ -1,0 +1,226 @@
+"use client";
+
+import {
+  CONTACT_INITIAL_STATE,
+  HONEYPOT_FIELD,
+  type ContactField,
+} from "@/actions/contact-fields";
+import { sendContactMessage } from "@/actions/contact";
+import { MailButton } from "@/components/Buttons/MailButton";
+import { CheckIcon } from "@/components/icons/CheckIcon";
+import { useActionState, useEffect, useRef, useState } from "react";
+
+const fieldStyles =
+  "w-full rounded-lg border border-border bg-glass px-4 py-3 text-main-text outline-none placeholder:text-secondary-text focus-visible:border-[#F5B668] dark:focus-visible:border-accent";
+
+type FieldProps = {
+  name: ContactField;
+  label: string;
+  placeholder: string;
+  error?: string;
+  defaultValue: string;
+  multiline?: boolean;
+};
+
+const Field = ({
+  name,
+  label,
+  placeholder,
+  error,
+  defaultValue,
+  multiline,
+}: FieldProps) => {
+  const props = {
+    id: name,
+    name,
+    placeholder,
+    defaultValue,
+    required: true,
+    // El error ya se pinta debajo; esto lo conecta para quien usa lector de
+    // pantalla, que si no solo escucha "campo inválido" sin el motivo.
+    "aria-invalid": error ? true : undefined,
+    "aria-describedby": error ? `${name}-error` : undefined,
+    className: fieldStyles,
+  };
+
+  return (
+    <div className="flex flex-col gap-1.5">
+      <label htmlFor={name} className="text-sm font-medium text-main-text">
+        {label}
+      </label>
+
+      {multiline ? (
+        <textarea {...props} rows={4} className={`${fieldStyles} resize-y`} />
+      ) : (
+        <input {...props} type={name === "email" ? "email" : "text"} />
+      )}
+
+      {error && (
+        <p id={`${name}-error`} className="text-sm text-[#B3261E] dark:text-[#FFB4AB]">
+          {error}
+        </p>
+      )}
+    </div>
+  );
+};
+
+const ContactForm = ({ onSent }: { onSent: () => void }) => {
+  const [state, formAction, pending] = useActionState(
+    sendContactMessage,
+    CONTACT_INITIAL_STATE,
+  );
+
+  if (state.status === "sent") {
+    return (
+      <div className="flex flex-col items-center gap-4 py-6 text-center">
+        <CheckIcon
+          className="size-10 text-[#FFDE46] dark:text-[#9B51E0]"
+          aria-hidden="true"
+        />
+        <p className="text-lg font-bold text-main-text">Mensaje enviado</p>
+        <p className="text-secondary-text">
+          Te respondo al correo que dejaste, normalmente en menos de un día.
+        </p>
+        <button
+          type="button"
+          onClick={onSent}
+          className="mt-2 rounded-lg bg-accent px-6 py-3 font-medium text-accent-text transition hover:brightness-90"
+        >
+          Cerrar
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <form action={formAction} className="mt-6 flex flex-col gap-4">
+      {/* Honeypot: invisible y fuera del recorrido de tabulación, para que no
+          lo encuentre ni el teclado ni un lector de pantalla. Solo lo llenan
+          los bots que completan todos los inputs del DOM. */}
+      <input
+        type="text"
+        name={HONEYPOT_FIELD}
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="hidden"
+      />
+
+      <Field
+        name="name"
+        label="Nombre"
+        placeholder="¿Cómo te llamas?"
+        error={state.errors.name}
+        defaultValue={state.values.name}
+      />
+      <Field
+        name="email"
+        label="Correo"
+        placeholder="tu@correo.com"
+        error={state.errors.email}
+        defaultValue={state.values.email}
+      />
+      <Field
+        name="message"
+        label="Mensaje"
+        placeholder="Cuéntame en qué estás pensando."
+        error={state.errors.message}
+        defaultValue={state.values.message}
+        multiline
+      />
+
+      {state.message && (
+        <p
+          aria-live="polite"
+          className="text-sm text-[#B3261E] dark:text-[#FFB4AB]"
+        >
+          {state.message}
+        </p>
+      )}
+
+      <button
+        type="submit"
+        disabled={pending}
+        className="mt-2 rounded-lg bg-accent px-7.5 py-4 font-medium text-accent-text transition hover:brightness-90 disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        {pending ? "Enviando…" : "Enviar mensaje"}
+      </button>
+    </form>
+  );
+};
+
+type ContactDialogProps = {
+  className?: string;
+  variant?: "filled" | "outline";
+};
+
+/**
+ * Botón de contacto y el formulario que abre.
+ *
+ * Usa el mismo `<dialog>` nativo que las notas del tablero: trae backdrop,
+ * cierre con Escape y foco atrapado sin librerías.
+ */
+export const ContactDialog = ({ className, variant }: ContactDialogProps) => {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  // Cada apertura remonta el formulario. Sin esto, quien envía un mensaje y
+  // vuelve a abrir se encuentra con la pantalla de "enviado" en vez del form:
+  // `useActionState` no tiene forma de resetearse.
+  const [openCount, setOpenCount] = useState(0);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    const onClick = (e: MouseEvent) => {
+      if (e.target === dialog) dialog.close();
+    };
+    dialog.addEventListener("click", onClick);
+    return () => dialog.removeEventListener("click", onClick);
+  }, []);
+
+  const open = () => {
+    setOpenCount((n) => n + 1);
+    dialogRef.current?.showModal();
+  };
+
+  return (
+    <>
+      <MailButton onClick={open} variant={variant} className={className} />
+
+      <dialog
+        ref={dialogRef}
+        aria-labelledby="contacto-titulo"
+        className="m-auto w-[min(92vw,32rem)] bg-transparent backdrop:bg-black/50 backdrop:backdrop-blur-sm"
+      >
+        <div className="glass rounded-2xl bg-[var(--main-bg)] px-6 py-8 text-left sm:px-8">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h2
+                id="contacto-titulo"
+                className="font-comic text-3xl text-main-text"
+              >
+                Hablemos
+              </h2>
+              <p className="mt-1 text-sm text-secondary-text">
+                Te llega directo a mi bandeja.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => dialogRef.current?.close()}
+              aria-label="Cerrar"
+              className="-mt-1 -mr-1 shrink-0 cursor-pointer rounded-lg px-3 py-1 text-2xl leading-none text-secondary-text transition hover:text-main-text"
+            >
+              ×
+            </button>
+          </div>
+
+          <ContactForm
+            key={openCount}
+            onSent={() => dialogRef.current?.close()}
+          />
+        </div>
+      </dialog>
+    </>
+  );
+};

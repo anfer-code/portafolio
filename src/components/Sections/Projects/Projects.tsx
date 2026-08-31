@@ -21,7 +21,17 @@ export const Projects = () => (
         </p>
       </div>
 
-      <div className="mt-16 grid grid-cols-1 gap-6 md:grid-cols-3">
+      {/* La grilla sigue a la cantidad de proyectos publicados: con tres o mas
+          van en fila de tres a lo ancho; con dos, dos columnas centradas y algo
+          mas angostas, para que las portadas no crezcan por encima de su tamano
+          real y la seccion no quede con el hueco de la tercera. */}
+      <div
+        className={`mt-16 grid grid-cols-1 gap-6 ${
+          projects.length > 2
+            ? "md:grid-cols-3"
+            : "mx-auto max-w-4xl md:grid-cols-2"
+        }`}
+      >
         {projects.map((project) => (
           <Card key={project.title} {...project} />
         ))}

@@ -131,8 +131,8 @@ export const projects: Project[] = [
     headline: { value: "5M+", label: "usuarios diarios" },
     metrics: [
       { label: "+25 sitios activos en la red", score: "0025" },
-      { label: "Cuatro temporadas seguidas en el equipo", score: "0004" },
-      { label: "Sitios con Core Web Vitals en verde", score: "LCP -40%, TTBF: -30%" },
+      { label: "LCP reducido en los sitios de la red", score: "-40%" },
+      { label: "TTFB reducido en los sitios de la red", score: "-30%" },
       { label: "AdSense y Optidigital integrados", score: "0002" },
     ],
 
@@ -287,6 +287,12 @@ export const projects: Project[] = [
     ],
   },
 
+  /* FinanceApp queda fuera de la home por ahora: su ficha todavia es contenido
+     de arranque (fechas, equipo y metricas sin confirmar) y al lado de los dos
+     proyectos reales se notaba. Para volver a publicarlo, descomentar este
+     bloque y completar los TODO de adentro; la grilla de Proyectos vuelve sola
+     a tres columnas. */
+  /*
   {
     slug: "finance-app",
     title: "FinanceApp",
@@ -363,6 +369,7 @@ export const projects: Project[] = [
       },
     ],
   },
+  */
 ];
 
 export const getProject = (slug: string) =>

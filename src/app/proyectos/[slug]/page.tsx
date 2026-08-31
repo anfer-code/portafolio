@@ -10,6 +10,7 @@ import { ProjectLearnings } from "@/components/Sections/Project/ProjectLearnings
 import { ProjectNav } from "@/components/Sections/Project/ProjectNav";
 import { ProjectShots } from "@/components/Sections/Project/ProjectShots";
 import { SkyArea } from "@/components/SkyArea/SkyArea";
+import { SITE_NAME } from "@/config";
 import { projects } from "@/data/projects";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -30,9 +31,26 @@ export async function generateMetadata(
 
   if (!project) return {};
 
+  const title = `${project.title} — ${SITE_NAME}`;
+  const url = `/proyectos/${project.slug}`;
+
   return {
-    title: `${project.title} — Anfernee Valera`,
+    title,
     description: project.tagline,
+    alternates: { canonical: url },
+    openGraph: {
+      type: "article",
+      locale: "es_ES",
+      url,
+      siteName: SITE_NAME,
+      title,
+      description: project.tagline,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: project.tagline,
+    },
   };
 }
 
