@@ -8,6 +8,7 @@ import {
 import { sendContactMessage } from "@/actions/contact";
 import { MailButton } from "@/components/Buttons/MailButton";
 import { CheckIcon } from "@/components/icons/CheckIcon";
+import { loadTurnstile, TURNSTILE_SITE_KEY } from "./turnstile";
 import { useActionState, useEffect, useRef, useState } from "react";
 
 const fieldStyles =
@@ -69,6 +70,41 @@ const ContactForm = ({ onSent }: { onSent: () => void }) => {
     sendContactMessage,
     CONTACT_INITIAL_STATE,
   );
+  const widgetRef = useRef<HTMLDivElement>(null);
+  const widgetId = useRef<string | null>(null);
+
+  // Monta el widget de Turnstile. Sin clave de sitio no se pinta nada y el
+  // formulario sigue funcionando: en local, sin claves, se puede probar igual.
+  useEffect(() => {
+    if (!TURNSTILE_SITE_KEY) return;
+    let cancelado = false;
+
+    loadTurnstile()
+      .then((turnstile) => {
+        if (cancelado || !widgetRef.current) return;
+        widgetId.current = turnstile.render(widgetRef.current, {
+          sitekey: TURNSTILE_SITE_KEY,
+          theme: "auto",
+          size: "flexible",
+          language: "es",
+        });
+      })
+      .catch((cause) => console.error("[contacto]", cause));
+
+    return () => {
+      cancelado = true;
+      if (widgetId.current) window.turnstile?.remove(widgetId.current);
+      widgetId.current = null;
+    };
+  }, []);
+
+  // Cada token sirve una sola vez y dura cinco minutos. Si el envío no salió,
+  // hay que pedir uno nuevo o el segundo intento se rechaza por duplicado.
+  useEffect(() => {
+    if (state.status === "error" && widgetId.current) {
+      window.turnstile?.reset(widgetId.current);
+    }
+  }, [state]);
 
   if (state.status === "sent") {
     return (
@@ -128,6 +164,11 @@ const ContactForm = ({ onSent }: { onSent: () => void }) => {
         defaultValue={state.values.message}
         multiline
       />
+
+      {/* El widget se pinta acá. `overflow-x-auto` porque tiene un ancho mínimo
+          propio y en pantallas muy angostas conviene que ruede antes de
+          desbordar el modal. */}
+      <div ref={widgetRef} className="min-w-0 overflow-x-auto" />
 
       {state.message && (
         <p
@@ -189,9 +230,11 @@ export const ContactDialog = ({ className, variant }: ContactDialogProps) => {
       <dialog
         ref={dialogRef}
         aria-labelledby="contacto-titulo"
-        className="m-auto w-[min(92vw,32rem)] bg-transparent backdrop:bg-black/50 backdrop:backdrop-blur-sm"
+        // `p-0`: el navegador le pone `padding: 1em` a todo <dialog> y Tailwind
+        // no lo resetea. Sumado al ancho, sacaba el modal fuera de pantalla.
+        className="m-auto w-[min(94vw,32rem)] bg-transparent p-0 backdrop:bg-black/50 backdrop:backdrop-blur-sm"
       >
-        <div className="glass rounded-2xl bg-[var(--main-bg)] px-6 py-8 text-left sm:px-8">
+        <div className="glass rounded-2xl bg-[var(--main-bg)] px-5 py-8 text-left sm:px-8">
           <div className="flex items-start justify-between gap-4">
             <div>
               <h2

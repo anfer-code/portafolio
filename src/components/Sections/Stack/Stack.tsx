@@ -35,7 +35,10 @@ export const Stack = () => (
             <h3 className="font-comic text-2xl text-main-text">Notas</h3>
           </div>
 
-          <div className="glass grid flex-1 grid-cols-2 justify-items-center gap-6 rounded-lg bg-glass p-8 sm:grid-cols-3">
+          {/* Padding y gap chicos en móvil: en 375px el panel se comía 88 de los
+              327 disponibles y las notas quedaban de 119px, sin lugar para una
+              palabra como "performance". */}
+          <div className="glass grid flex-1 grid-cols-2 justify-items-center gap-4 rounded-lg bg-glass p-4 sm:grid-cols-3 sm:gap-6 sm:p-8">
             {notes.map((note, i) => (
               <Note key={note.title} {...note} delay={`${i * 0.45}s`} />
             ))}

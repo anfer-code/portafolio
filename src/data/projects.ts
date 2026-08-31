@@ -32,6 +32,13 @@ export type ContributionGroup = {
  */
 export type ProjectShot = {
   src?: string;
+  /**
+   * Versión a mostrar al ampliar, si conviene que sea otra. Las capturas de
+   * móvil se publican compuestas sobre un fondo 16:10 para que llenen el
+   * bloque; ampliadas, en cambio, se ve mejor el original vertical.
+   * Sin esto se amplía `src`.
+   */
+  full?: string;
   alt: string;
   caption: string;
 };
@@ -79,8 +86,8 @@ export const projects: Project[] = [
     title: "Futbol Sites",
     tagline:
       "Una red de más de 25 sitios de fútbol que sirve millones de visitas al día.",
-    imageLight: "/img/light/proyectos.png",
-    imageDark: "/img/dark/proyectos.png",
+    imageLight: "/img/futbol-portada-light.jpg",
+    imageDark: "/img/futbol-portada-dark.jpg",
     glow: "#D8122F",
 
     kind: "Medios digitales",
@@ -150,11 +157,13 @@ export const projects: Project[] = [
     shots: [
       {
         alt: "Home de uno de los sitios de la red",
-        caption: "Home de uno de los sitios de la red",
+        caption: "Bolavip, sitio insignia de Futbolsites",
+        src: '/img/home-futbolsites.jpeg',
       },
       {
         alt: "Tabla de posiciones y resultados en vivo",
         caption: "Tabla de posiciones y resultados en vivo",
+        src: '/img/tables-futbolsites.jpeg',
       },
     ],
 
@@ -183,8 +192,8 @@ export const projects: Project[] = [
     title: "One Rides",
     tagline:
       "Transporte y encomiendas: features de punta a punta en Android, iOS, backend y web.",
-    imageLight: "/img/light/proyectos.png",
-    imageDark: "/img/dark/proyectos.png",
+    imageLight: "/img/oneride-portada-light.jpg",
+    imageDark: "/img/oneride-portada-dark.jpg",
     glow: "#22c55e",
 
     kind: "Transporte y delivery",
@@ -260,10 +269,14 @@ export const projects: Project[] = [
       {
         alt: "Pantalla de solicitud de viaje en la app de pasajero",
         caption: "Solicitud de viaje en la app de pasajero",
+        src: "/img/oneride-viaje-16x10.jpg",
+        full: "/img/oneride-viaje.jpeg",
       },
       {
         alt: "Flujo de pago móvil con validación de la referencia bancaria",
         caption: "Validación del pago móvil",
+        src: "/img/oneride-pagomovil-16x10.jpg",
+        full: "/img/oneride-pagomovil.jpeg",
       },
     ],
 

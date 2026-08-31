@@ -47,10 +47,16 @@ body {
 }
 
 /* El header es fijo: al saltar a un ancla, deja aire para que el título
-   de la sección no quede oculto detrás de él. */
+   de la sección no quede oculto detrás de él.
+
+   `overflow-x: clip` y no `hidden`: `hidden` convierte al elemento en un
+   contenedor de scroll y eso rompe el `position: sticky` de los hijos (el
+   título de Experiencia en escritorio, entre otros). `clip` recorta sin crear
+   scroll, así que contiene el desborde lateral sin efectos colaterales. */
 html {
   scroll-padding-top: 9rem;
   scroll-behavior: smooth;
+  overflow-x: clip;
 }
 
 /* Respeta a quien pidió menos animación en su sistema. */

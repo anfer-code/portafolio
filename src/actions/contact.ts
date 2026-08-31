@@ -26,6 +26,55 @@ const FROM = "Portafolio <contacto@anfervalera.com>";
 const TO = "anfervalera11@gmail.com";
 
 const FAILURE = `No pude enviar el mensaje. Escríbeme directo a ${TO}.`;
+const UNVERIFIED = "No pude verificar el envío. Recarga la página e inténtalo de nuevo.";
+
+const TURNSTILE_VERIFY =
+  "https://challenges.cloudflare.com/turnstile/v0/siteverify";
+
+/**
+ * Comprueba contra Cloudflare el token que generó el widget.
+ *
+ * El widget del navegador no protege nada solo: cualquiera puede postear a esta
+ * accion sin pasar por la pagina. Lo que protege es esta consulta.
+ *
+ * Sin `TURNSTILE_SECRET_KEY` deja pasar y avisa por consola, para que el
+ * formulario siga siendo usable en local sin las claves. Si la consulta falla,
+ * en cambio, rechaza: si Cloudflare no responde el visitante tampoco habria
+ * conseguido un token, asi que dejarlo pasar solo abriria la puerta a quien
+ * pueda bloquear esa consulta a proposito.
+ */
+const passesTurnstile = async (token: string) => {
+  const secret = process.env.TURNSTILE_SECRET_KEY;
+
+  if (!secret) {
+    console.warn("[contacto] sin TURNSTILE_SECRET_KEY: se envia sin verificar");
+    return true;
+  }
+
+  if (!token) return false;
+
+  try {
+    const response = await fetch(TURNSTILE_VERIFY, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({ secret, response: token }),
+    });
+
+    const result = (await response.json()) as {
+      success: boolean;
+      "error-codes"?: string[];
+    };
+
+    if (!result.success) {
+      console.warn("[contacto] Turnstile rechazo el token:", result["error-codes"]);
+    }
+
+    return result.success === true;
+  } catch (cause) {
+    console.error("[contacto] no se pudo consultar a Turnstile:", cause);
+    return false;
+  }
+};
 
 export async function sendContactMessage(
   _previous: ContactState,
@@ -38,6 +87,10 @@ export async function sendContactMessage(
   // que pasa. Creyendo que funcionó, se va.
   if (String(formData.get(HONEYPOT_FIELD) ?? "")) {
     return { status: "sent", message: "", errors: {}, values: EMPTY_VALUES };
+  }
+
+  if (!(await passesTurnstile(String(formData.get("cf-turnstile-response") ?? "")))) {
+    return { status: "error", message: UNVERIFIED, errors: {}, values };
   }
 
   const errors = validateContact(values);
