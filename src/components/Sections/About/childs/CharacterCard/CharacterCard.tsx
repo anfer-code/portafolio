@@ -1,8 +1,12 @@
-import { stats } from "@/data/stats";
+import { getContent } from "@/data/content";
+import type { Locale } from "@/i18n/config";
 import Image from "next/image";
 import { Ability } from "../Ability/Ability";
 
-export const CharacterCard = () => (
+export const CharacterCard = ({ locale }: { locale: Locale }) => {
+  const { stats } = getContent(locale);
+
+  return (
   <div className="relative mx-auto flex min-h-[520px] w-full max-w-131.75 flex-col bg-[url('/img/dark/marco.png')] bg-[length:100%_100%] bg-center bg-no-repeat sm:aspect-527/618 sm:min-h-0 sm:bg-contain dark:bg-[url('/img/light/marco.png')]">
     {/* Zona superior (crema): avatar + nombre */}
     <div className="flex h-[40%] flex-col items-center justify-center gap-3 pt-8 sm:pt-4">
@@ -43,4 +47,5 @@ export const CharacterCard = () => (
       ))}
     </dl>
   </div>
-);
+  );
+};

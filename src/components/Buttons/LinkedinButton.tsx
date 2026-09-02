@@ -2,12 +2,14 @@ import Image from "next/image";
 import { Button } from "./Button";
 
 type LinkedinButtonProps = {
+  label: string;
   href: string;
   className?: string;
   bgClass?: string;
 };
 
 export const LinkedinButton = ({
+  label,
   href,
   className = "",
   bgClass = "bg-glass dark:bg-[#171C68]",
@@ -21,6 +23,6 @@ export const LinkedinButton = ({
     className={className}
     icon={<Image src="/linkedn.svg" alt="" width={16} height={16} />}
   >
-    Contactar vía LinkedIn
+    {label}
   </Button>
 );

@@ -1,16 +1,19 @@
+import type { Dictionary } from "@/i18n/dictionaries";
 import { Button } from "@/components/Buttons/Button";
 import { Clouds } from "@/components/Clouds/Clouds";
 import { ArrowIcon } from "@/components/icons/ArrowIcon";
 import { ThemeImage } from "@/components/ThemeImage/ThemeImage";
-import type { Project } from "@/data/projects";
+import type { Project } from "@/data/types";
 import Link from "next/link";
 
-type ProjectHeroProps = Pick<
+type ProjectHeroProps = { t: Dictionary["proyecto"]; volverHref: string } & Pick<
   Project,
   "title" | "tagline" | "kind" | "role" | "duration" | "live" | "imageLight" | "imageDark" | "glow"
 >;
 
 export const ProjectHero = ({
+  t,
+  volverHref,
   title,
   tagline,
   kind,
@@ -29,13 +32,13 @@ export const ProjectHero = ({
     <div className="relative z-10 mx-auto grid max-w-6xl items-center gap-12 px-6 lg:grid-cols-2 lg:gap-16">
       <div>
         <Link
-          href="/#proyectos"
+          href={volverHref}
           className="inline-flex items-center gap-2 text-sm font-medium text-secondary-text transition-opacity hover:opacity-60"
         >
           {/* La flecha del sitio apunta arriba-derecha: rotarla la vuelve un
               "volver" sin necesidad de un segundo ícono. */}
           <ArrowIcon className="size-4 rotate-[225deg]" aria-hidden="true" />
-          Volver a proyectos
+          {t.volver}
         </Link>
 
         <p className="mt-6 font-press-start text-xs tracking-wider text-[#3A2410] uppercase dark:text-[#C9BCEF]">
@@ -52,11 +55,11 @@ export const ProjectHero = ({
 
         <dl className="mt-8 flex flex-wrap gap-x-10 gap-y-4">
           <div>
-            <dt className="text-sm text-secondary-text">Rol</dt>
+            <dt className="text-sm text-secondary-text">{t.rol}</dt>
             <dd className="font-bold text-main-text">{role}</dd>
           </div>
           <div>
-            <dt className="text-sm text-secondary-text">Duración</dt>
+            <dt className="text-sm text-secondary-text">{t.duracion}</dt>
             <dd className="font-bold text-main-text">{duration}</dd>
           </div>
         </dl>

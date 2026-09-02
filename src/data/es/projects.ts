@@ -1,84 +1,4 @@
-/**
- * Fila del marcador de "Impacto".
- *
- * Ojo con los acentos: estas etiquetas se pintan en mayúsculas con Press Start
- * 2P, que no trae las vocales acentuadas en caja alta y las sustituye por la
- * fuente del sistema (se ve "OPTIMICé" en medio de la línea). Por eso el texto
- * se redacta sin acentos ni eñes.
- */
-export type ProjectMetric = {
-  /** El logro completo, tal como se lee en la fila. */
-  label: string;
-  /** Valor corto, estilo marcador: "0025", "+5M", "100%". */
-  score: string;
-};
-
-/** Dato estrella del proyecto: va grande, junto al trofeo. */
-export type ProjectHeadline = {
-  value: string;
-  /** Misma restricción de acentos que `ProjectMetric["label"]`. */
-  label: string;
-};
-
-export type ContributionGroup = {
-  title: string;
-  items: string[];
-};
-
-/**
- * Captura del proyecto. Van de a pares, en dos columnas, sin título de
- * sección: se leen como parte de la página y no como una galería aparte.
- * Sin `src` se pinta un placeholder que anuncia lo que va ahí.
- */
-export type ProjectShot = {
-  src?: string;
-  /**
-   * Versión a mostrar al ampliar, si conviene que sea otra. Las capturas de
-   * móvil se publican compuestas sobre un fondo 16:10 para que llenen el
-   * bloque; ampliadas, en cambio, se ve mejor el original vertical.
-   * Sin esto se amplía `src`.
-   */
-  full?: string;
-  alt: string;
-  caption: string;
-};
-
-export type Learning = {
-  title: string;
-  body: string;
-};
-
-export type Project = {
-  slug: string;
-  title: string;
-  /** Una línea que resume el proyecto. Se usa en el hero y en el <meta>. */
-  tagline: string;
-
-  /* Card de la home */
-  imageLight: string;
-  imageDark: string;
-  glow: string;
-
-  /* Ficha */
-  kind: string;
-  role: string;
-  period: string;
-  duration: string;
-  team: string;
-  /** Solo si el proyecto es público; sin esto no se pinta el botón. */
-  live?: { label: string; href: string };
-
-  /* Detalle */
-  summary: string;
-  challenge: string;
-  contributions: ContributionGroup[];
-  headline: ProjectHeadline;
-  metrics: ProjectMetric[];
-  /** Los nombres que existen en `data/stack.ts` se pintan con su ícono. */
-  stack: string[];
-  shots: ProjectShot[];
-  learnings: Learning[];
-};
+import type { Project } from "../types";
 
 export const projects: Project[] = [
   {
@@ -92,20 +12,20 @@ export const projects: Project[] = [
 
     kind: "Medios digitales",
     role: "Frontend Developer Semi-Senior",
-    period: "Jul 2022 — Presente",
+    period: "Jul 2022 — Jul 2026",
     duration: "4 años",
     team: "Equipo de producto distribuido, con front, back, SEO y ads",
     live: { label: "Ver sitio", href: "https://www.futbolsites.net/" },
     summary:
-      "Futbol Sites es la red de medios deportivos de Better Collective en LATAM: sitios de noticias, resultados, tablas y estadísticas de fútbol que en conjunto mueven millones de visitas diarias. Entré en julio de 2022 y desde entonces construyo y mantengo esa red junto al equipo de producto.",
+      "Futbol Sites es la red de medios deportivos de Better Collective en LATAM: sitios de noticias, resultados, tablas y estadísticas de fútbol que en conjunto mueven millones de visitas diarias. Entré en julio de 2022 y en mi paso por la empresa, mantuve esa red junto al equipo de producto.",
     challenge:
-      "Un mismo core de front-end tiene que servir a decenas de sitios con marcas, idiomas y mercados distintos, sin que lanzar uno nuevo signifique empezar de cero. Encima está la tensión de siempre en medios: cada script de publicidad pelea contra los Core Web Vitals, y ahí el rendimiento no es un lujo, es tráfico, y el tráfico son ingresos.",
+      "En futbolsites, los sitios comparten componentes, servicios y arquitectura, así que a la hora de implementar un cambio, es necesario asegurar la escalabilidad desde el primer momento.\nEn este proyecto, cada sitio tiene sus particularidades a nivel de negocio o de locación, lo cual exige un gran nivel de detalle al momento de desarrollar.\nA eso se suma el desafío del performance. Los sitios cargan publicidad y contenido dinámico, lo cual complica el cumplimiento de los Core Web Vitals, desarrollar soluciones que permitan que la publicidad conviva con el contenido y que los sitios carguen rápido es un desafío constante.",
 
     contributions: [
       {
         title: "Arquitectura y nuevos sitios",
         items: [
-          "Creación de nuevos sitios adaptando su diseño a la arquitectura existente, en lugar de forkear el proyecto.",
+          "Creación de nuevos sitios basados en la arquitectura base del proyecto, ya sea reutilizando los múltiples servicios y componentes o realizando modificaciones según el contexto..",
           "Desarrollo de componentes reutilizables que hoy usan varios sitios de la red.",
           "Features cross-team pensados desde el inicio para escalar a toda la red, no a un solo sitio.",
         ],
@@ -135,7 +55,7 @@ export const projects: Project[] = [
       },
     ],
 
-    headline: { value: "5M+", label: "usuarios diarios" },
+    headline: { value: "+5M", label: "usuarios diarios" },
     metrics: [
       { label: "+25 sitios activos en la red", score: "0025" },
       { label: "LCP reducido en los sitios de la red", score: "-40%" },
@@ -158,15 +78,14 @@ export const projects: Project[] = [
       {
         alt: "Home de uno de los sitios de la red",
         caption: "Bolavip, sitio insignia de Futbolsites",
-        src: '/img/home-futbolsites.jpeg',
+        src: "/img/home-futbolsites.jpeg",
       },
       {
         alt: "Tabla de posiciones y resultados en vivo",
         caption: "Tabla de posiciones y resultados en vivo",
-        src: '/img/tables-futbolsites.jpeg',
+        src: "/img/tables-futbolsites.jpeg",
       },
     ],
-
     learnings: [
       {
         title: "Escalar de verdad",
@@ -177,8 +96,8 @@ export const projects: Project[] = [
         body: "La publicidad no es negociable en un medio, así que el trabajo real es hacerla convivir con los Core Web Vitals en vez de pelearse con ella.",
       },
       {
-        title: "Producción manda",
-        body: "Desplegar, monitorear y arreglar lo que se rompe enseña más de un sistema que cualquier documentación.",
+        title: "Trabajo en equipo",
+        body: "Trabajar en un equipo con mas de 10 personas, te hace entender la importancia de habilidades sociales, como la comunicación, la empatia, el ownership y la responsabilidad. Le doy gracias a mi equipo por enseñarme a ser mejor profesional y mejor persona.",
       },
       {
         title: "Quedarse 4 años",
@@ -196,24 +115,23 @@ export const projects: Project[] = [
     imageDark: "/img/oneride-portada-dark.jpg",
     glow: "#22c55e",
 
-    kind: "Transporte y delivery",
+    kind: "Transporte y delivery - Proyecto",
     role: "Desarrollador full stack: movil, web y backend",
     period: "Jun 2026 — Presente",
     duration: "2 meses",
     team: "Tres desarrolladores sobre backend, apps nativas y paneles",
-    // TODO: agregar el enlace a la store si se quiere enlazar.
-    // live: { label: "Ver en la store", href: "https://..." },
+    live: { label: "Ver en la store", href: "https://play.google.com/store/apps/details?id=com.onerides.customer&hl=es_VE" },
 
     summary:
       "One Rides es una plataforma de transporte de pasajeros y encomiendas que opera en Venezuela, con apps nativas para pasajero y conductor, un backend en Node y siete paneles web. Los tomé como clientes junto a dos compañeros desarrolladores para mantener y hacer crecer ese sistema: doce repositorios en producción, cuatro plataformas avanzando en paralelo.",
     challenge:
-      "Acá una feature no termina en una pantalla. Un cambio de contrato arranca en el modelo de Mongoose y sigue en los servicios de Angular, en los DTO de Kotlin y en los modelos de Swift: si una de las cuatro capas queda atrás, el viaje se rompe en producción. Y encima el sistema mueve dinero real y gente real en la calle, así que no hay ventana cómoda para equivocarse.",
+      "Un proyecto exigente y un sistema con muchas piezas: un backend, siete paneles web y cuatro aplicaciones nativas. \n Cada nuevo feature debe ser configurable desde los distintos paneles, completamente funcional desde el front y además soportar la lógica del negocio desde el back. Aquí el monitoreo constante de las 4 aplicaciones es ley para poder detectar y solucionar posibles problemas.",
 
     contributions: [
       {
         title: "Pagos y billetera",
         items: [
-          "Integración del flujo de Pago Móvil de Bancaribe: validación por webhook bancario, aprobación de recargas y reclamos por referencia.",
+          "Integración de pagos por transferencia bancaria instantánea (Pago Móvil): confirmación automática por webhook, aprobación de recargas y reclamos por número de referencia.",
           "Directorio de números de pago asociados, con verificación por OTP y rechazo de números ya usados en otra cuenta.",
           "Entrada de montos al estilo de la banca venezolana, de derecha a izquierda, replicada en Android, iOS y panel web.",
         ],
@@ -222,22 +140,22 @@ export const projects: Project[] = [
         title: "Estabilidad en producción",
         items: [
           "Diagnóstico y corrección del cierre forzado de la app de conductor al llegar un viaje con la pantalla bloqueada.",
-          "Corrección del bucle de navegación que reseteaba el mapa e impedía aceptar viajes.",
-          "Rastreo de la falla real en la reasignación de conductor: viajes huérfanos acumulados, no la categoría del vehículo.",
+          "Corrección en el manejo de los sockets del chat para que la conversación se cierre al cancelar o reasignar un viaje, y el conductor nuevo no reciba lo que se habló con el anterior.",
+          "Corrección del bucle de arranque en iOS con la sesión vencida, que dejaba la app clavada en la pantalla de carga sin llegar nunca al inicio.",
         ],
       },
       {
         title: "Integridad del despacho",
         items: [
-          "Restricción de autoclickers en la app de conductor: detección en el dispositivo, validación en servidor y gesto de deslizar para aceptar.",
+          "Mejora en la integridad de la aplicación contra autoclickers, con detección en el propio teléfono, validación en el servidor y cambio en la UI.",
           "Ventana exclusiva de asignación para conductores favoritos, configurable desde el backend.",
-          "Bloqueo de conductores por parte del cliente, cableado de la API al panel de administración y a las cuatro apps.",
+          "Bloqueo de conductores desde la app de pasajero, conexión con la API, el panel de administración y las cuatro apps, para que un conductor bloqueado no vuelva a recibir sus viajes.",
         ],
       },
       {
         title: "Multiplataforma y entorno",
         items: [
-          "Features completas en Kotlin, Swift, Node y Angular, coordinando el mismo cambio de contrato en las cuatro capas.",
+          "Creación de múltiples features nuevos y mejoras en las distintas plataformas en sus respectivas tecnologías.",
           "Entorno local aislado y despliegue a QA, documentados para que el resto del equipo los pueda repetir.",
           "Documentación técnica de cada feature y trazabilidad de las tareas en ClickUp.",
         ],
@@ -282,20 +200,20 @@ export const projects: Project[] = [
 
     learnings: [
       {
-        title: "Deslizar, no tocar",
-        body: "Algunos conductores usaban autoclickers para acaparar viajes. Por eso aceptar dejó de ser un botón: ahora se desliza, y el servidor descarta las aceptaciones con reflejos imposibles.",
+        title: "Autoclickers",
+        body: "Algunos conductores usaban autoclickers para acaparar viajes. Se penso en una solución dividida en distintos frentes: ahora se desliza para evitar el comportamiento más común, y el servidor además rechaza las aceptaciones automatizadas.",
       },
       {
-        title: "Perdidos en el mar",
-        body: "Cuando un mapa no sabe dónde está, cae en latitud 0, longitud 0: un punto vacío en medio del Atlántico. Ver ahí a los conductores fue la señal de que el mapa se rehacía entero a cada segundo.",
+        title: "Ambiente de pruebas",
+        body: "Cuando entré al proyecto, todas las pruebas se hacían en producción. Luego de mucha insistencia, logramos convencer al cliente de crear un ambiente de pruebas: ahora ningún usuario se cruza con un viaje a $0,01.",
       },
       {
-        title: "Hoy no existía",
-        body: "Venezuela va cuatro horas detrás de Londres, y por esa diferencia el calendario de viajes programados calculaba mal el día: podías reservar para mañana, pero no para dentro de dos horas.",
+        title: "Los favoritos primero",
+        body: "La aplicación permitía marcar conductores como favoritos, pero eso no cambiaba nada. Ahora los favoritos tienen una ventana de tiempo exclusiva antes que el resto.",
       },
       {
-        title: "La única salida",
-        body: "Pagabas, salía “Estamos validando tu pago” y el botón de atrás quedaba bloqueado esperando al banco. Si el banco no contestaba nunca, la única forma de salir era cerrar la app a la fuerza.",
+        title: "Que nadie pierda su plata",
+        body: "Cancelar un viaje dejaba dinero perdido. Ahora se devuelve todo lo que corresponde, la penalización se cubre con lo ya abonado y la app avisa que el resto vuelve a la billetera.",
       },
     ],
   },
@@ -384,6 +302,3 @@ export const projects: Project[] = [
   },
   */
 ];
-
-export const getProject = (slug: string) =>
-  projects.find((project) => project.slug === slug);

@@ -2,6 +2,7 @@ import { MailIcon } from "@/components/icons/MailIcon";
 import { Button } from "./Button";
 
 type MailButtonProps = {
+  label: string;
   href?: string;
   onClick?: () => void;
   className?: string;
@@ -9,6 +10,7 @@ type MailButtonProps = {
 };
 
 export const MailButton = ({
+  label,
   href,
   onClick,
   className = "",
@@ -24,6 +26,6 @@ export const MailButton = ({
     // así se ve tanto sobre fondo claro como oscuro.
     icon={<MailIcon className="size-4" aria-hidden="true" />}
   >
-    Escribir un correo
+    {label}
   </Button>
 );

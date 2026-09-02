@@ -1,17 +1,19 @@
-import type { ProjectHeadline, ProjectMetric } from "@/data/projects";
+import type { Dictionary } from "@/i18n/dictionaries";
+import type { ProjectHeadline, ProjectMetric } from "@/data/types";
 import Image from "next/image";
 
 type ProjectImpactProps = {
+  t: Dictionary["proyecto"];
   headline: ProjectHeadline;
   metrics: ProjectMetric[];
 };
 
-export const ProjectImpact = ({ headline, metrics }: ProjectImpactProps) => (
+export const ProjectImpact = ({ t, headline, metrics }: ProjectImpactProps) => (
   <section id="impacto" className="w-full px-6 pt-20 pb-10 sm:pt-24">
     <div className="mx-auto max-w-300">
-      <h2 className="font-comic text-4xl text-main-text sm:text-5xl">Impacto</h2>
+      <h2 className="font-comic text-4xl text-main-text sm:text-5xl">{t.impacto}</h2>
       <p className="mt-3 max-w-2xl text-lg text-secondary-text">
-        Números que deje en el proyecto.
+        {t.impactoTexto}
       </p>
 
       <div className="mt-10 grid gap-4 lg:grid-cols-[minmax(0,20rem)_1fr]">
@@ -25,7 +27,7 @@ export const ProjectImpact = ({ headline, metrics }: ProjectImpactProps) => (
           />
 
           <p className="font-press-start text-[10px] leading-relaxed tracking-wider text-secondary-text uppercase">
-            Resultados del proyecto
+            {t.resultados}
           </p>
 
           <p className="font-press-start text-3xl leading-tight break-words text-main-text uppercase [text-shadow:3px_3px_0_rgba(0,0,0,0.35)] sm:text-4xl">

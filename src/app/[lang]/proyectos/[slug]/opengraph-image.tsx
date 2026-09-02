@@ -1,5 +1,6 @@
 import { loadStar, OgCard, OG_SIZE } from "@/components/OgCard/OgCard";
-import { getProject, projects } from "@/data/projects";
+import { getProject, projectSlugs } from "@/data/content";
+import { LOCALES, type Locale } from "@/i18n/config";
 import { ImageResponse } from "next/og";
 import { notFound } from "next/navigation";
 
@@ -13,16 +14,20 @@ export const contentType = "image/png";
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return projects.map((project) => ({ slug: project.slug }));
+  // El segmento de idioma también es dinámico: hay que enumerar la combinación
+  // de los dos, o Next deja las páginas fuera del prerender.
+  return LOCALES.flatMap((lang) =>
+    projectSlugs.map((slug) => ({ lang, slug })),
+  );
 }
 
 export default async function Image({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ lang: string; slug: string }>;
 }) {
-  const { slug } = await params;
-  const project = getProject(slug);
+  const { lang, slug } = await params;
+  const project = getProject(lang as Locale, slug);
 
   if (!project) notFound();
 

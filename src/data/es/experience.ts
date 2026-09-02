@@ -1,16 +1,10 @@
-export type Job = {
-  role: string;
-  company: string;
-  period: string;
-  description?: string;
-  responsibilities: string[];
-};
+import type { Job } from "../types";
 
 export const experience: Job[] = [
   {
     role: "Desarrollador Frontend Semi-Senior",
     company: "Futbol Sites - A part of Better Collective",
-    period: "Jul 2022 — Presente",
+    period: "Jul 2022 — Jul 2026",
     description:
       "Desarrollo y mantengo múltiples sitios web de medios digitales, trabajando en la creación de nuevos sitios y features, optimización de performance y monetización.",
     responsibilities: [

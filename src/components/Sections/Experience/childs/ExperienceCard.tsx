@@ -1,5 +1,5 @@
 import { CheckIcon } from "@/components/icons/CheckIcon";
-import type { Job } from "@/data/experience";
+import type { Job } from "@/data/types";
 
 export const ExperienceCard = ({
   role,

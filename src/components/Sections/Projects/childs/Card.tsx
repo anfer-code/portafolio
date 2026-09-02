@@ -1,22 +1,28 @@
+import { localePath, type Locale } from "@/i18n/config";
+import { getDictionarySync } from "@/i18n/dictionaries";
 import { ArrowIcon } from "@/components/icons/ArrowIcon";
 import { ThemeImage } from "@/components/ThemeImage/ThemeImage";
-import type { Project } from "@/data/projects";
+import type { Project } from "@/data/types";
 import Link from "next/link";
 
-type CardProps = Pick<
+type CardProps = { locale: Locale } & Pick<
   Project,
   "slug" | "title" | "imageLight" | "imageDark" | "glow"
 >;
 
 export const Card = ({
+  locale,
   slug,
   title,
   imageLight,
   imageDark,
   glow,
-}: CardProps) => (
+}: CardProps) => {
+  const t = getDictionarySync(locale);
+
+  return (
   <Link
-    href={`/proyectos/${slug}`}
+    href={localePath(locale, `/proyectos/${slug}`)}
     className="group glass relative flex flex-col overflow-hidden rounded-2xl bg-[#68686833] transition-[transform,filter] duration-300 hover:-translate-y-1"
   >
     <h3 className="px-6 pt-6 text-xl font-bold text-main-text">{title}</h3>
@@ -40,7 +46,7 @@ export const Card = ({
             darkSrc={imageDark}
             width={386}
             height={284}
-            alt={`Vista previa del proyecto ${title}`}
+            alt={t.proyectos.vistaPrevia(title)}
             className="h-auto w-full"
           />
         </div>
@@ -53,3 +59,4 @@ export const Card = ({
     </div>
   </Link>
 );
+};

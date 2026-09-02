@@ -1,6 +1,6 @@
 "use client";
 
-import type { Note as NoteType } from "@/data/notes";
+import type { Note as NoteType } from "@/data/types";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 type NoteProps = NoteType & {

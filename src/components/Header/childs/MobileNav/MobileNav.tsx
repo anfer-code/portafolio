@@ -1,14 +1,17 @@
 "use client";
 
 import { Clouds } from "@/components/Clouds/Clouds";
+import type { Dictionary } from "@/i18n/dictionaries";
 import { CloseIcon } from "@/components/icons/CloseIcon";
 import { MenuIcon } from "@/components/icons/MenuIcon";
-import { menuItems } from "@/data/nav";
 import { useEffect, useRef, useState } from "react";
 
 type MobileNavProps = {
-  /** Ver `navBase` en `Header`. */
-  navBase?: string;
+  /** Enlaces ya traducidos, los mismos que usa el menú de escritorio. */
+  items: { name: string; href: string }[];
+  /** Prefijo para las anclas fuera de la home. Ver `Header`. */
+  base: string;
+  t: Dictionary["nav"];
 };
 
 /**
@@ -23,7 +26,7 @@ type MobileNavProps = {
  * Usa el mismo `<dialog>` nativo que el resto del sitio: trae cierre con
  * Escape, foco atrapado y bloqueo del scroll de fondo sin una sola línea de JS.
  */
-export const MobileNav = ({ navBase = "" }: MobileNavProps) => {
+export const MobileNav = ({ items, base, t }: MobileNavProps) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [open, setOpen] = useState(false);
   // Remonta la lista en cada apertura para que la animación escalonada vuelva
@@ -53,7 +56,7 @@ export const MobileNav = ({ navBase = "" }: MobileNavProps) => {
       <button
         type="button"
         onClick={abrir}
-        aria-label="Abrir menú"
+        aria-label={t.abrirMenu}
         aria-expanded={open}
         aria-haspopup="dialog"
         className="bg-glass glass flex size-14 cursor-pointer items-center justify-center rounded-lg text-main-text"
@@ -67,7 +70,7 @@ export const MobileNav = ({ navBase = "" }: MobileNavProps) => {
           al desplazar y `100vh` deja un salto al pie. */}
       <dialog
         ref={dialogRef}
-        aria-label="Menú de navegación"
+        aria-label={t.menu}
         className="m-0 h-dvh max-h-none w-screen max-w-none bg-transparent p-0 backdrop:bg-transparent"
       >
         <div className="relative flex h-full w-full flex-col overflow-hidden bg-[url('/img/light/small-bg.png')] bg-cover bg-center dark:bg-[url('/img/dark/small-bg.png')]">
@@ -86,7 +89,7 @@ export const MobileNav = ({ navBase = "" }: MobileNavProps) => {
             <button
               type="button"
               onClick={cerrar}
-              aria-label="Cerrar menú"
+              aria-label={t.cerrarMenu}
               className="bg-glass glass flex size-14 cursor-pointer items-center justify-center rounded-lg text-main-text"
             >
               <CloseIcon className="size-6" />
@@ -97,10 +100,10 @@ export const MobileNav = ({ navBase = "" }: MobileNavProps) => {
             key={aperturas}
             className="relative z-10 flex flex-1 flex-col items-center justify-center gap-4 pb-24"
           >
-            {menuItems.map((item, i) => (
+            {items.map((item, i) => (
               <a
                 key={item.name}
-                href={`${navBase}${item.href}`}
+                href={`${base}${item.href}`}
                 onClick={cerrar}
                 style={{ animationDelay: `${i * 0.07}s` }}
                 className="animate-menu-in font-comic text-5xl text-main-text capitalize transition-transform duration-200 active:scale-95 motion-reduce:animate-none"

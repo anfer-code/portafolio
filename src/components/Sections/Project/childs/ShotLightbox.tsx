@@ -1,10 +1,20 @@
 "use client";
 
-import type { ProjectShot } from "@/data/projects";
+import type { ProjectShot } from "@/data/types";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 
-type ShotLightboxProps = ProjectShot & { src: string };
+/**
+ * Recibe las etiquetas ya resueltas y no el diccionario entero: este componente
+ * es de cliente, y por esa frontera solo cruzan datos serializables. El
+ * diccionario trae funciones, y pasarlo entero rompe el build.
+ */
+type ShotLightboxProps = ProjectShot & {
+  src: string;
+  ampliar: string;
+  ampliarLabel: string;
+  cerrar: string;
+};
 
 /**
  * Captura del proyecto que se amplía al tocarla.
@@ -14,7 +24,15 @@ type ShotLightboxProps = ProjectShot & { src: string };
  * navegador le mete `padding: 1em` a todo <dialog> y el preflight de Tailwind
  * no lo resetea.
  */
-export const ShotLightbox = ({ src, full, alt, caption }: ShotLightboxProps) => {
+export const ShotLightbox = ({
+  src,
+  full,
+  alt,
+  caption,
+  ampliar,
+  ampliarLabel,
+  cerrar,
+}: ShotLightboxProps) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
   // Las capturas de móvil se publican compuestas sobre un fondo 16:10 para que
   // llenen el bloque; ampliadas se ve mejor el original.
@@ -35,7 +53,7 @@ export const ShotLightbox = ({ src, full, alt, caption }: ShotLightboxProps) => 
       <button
         type="button"
         onClick={() => dialogRef.current?.showModal()}
-        aria-label={`Ampliar: ${caption}`}
+        aria-label={ampliarLabel}
         className="glass group relative block aspect-16/10 w-full cursor-zoom-in rounded-2xl bg-glass focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-main-text"
       >
         <Image
@@ -56,7 +74,7 @@ export const ShotLightbox = ({ src, full, alt, caption }: ShotLightboxProps) => 
           aria-hidden="true"
           className="absolute right-3 bottom-3 rounded-md bg-[#1D1E30]/75 px-2 py-1 font-press-start text-[8px] tracking-wider text-white/90 uppercase opacity-100 transition-opacity duration-200 sm:opacity-0 sm:group-hover:opacity-100"
         >
-          Ampliar
+          {ampliar}
         </span>
       </button>
 
@@ -88,7 +106,7 @@ export const ShotLightbox = ({ src, full, alt, caption }: ShotLightboxProps) => 
               onClick={() => dialogRef.current?.close()}
               className="shrink-0 cursor-pointer rounded-md bg-white/15 px-3 py-1.5 text-sm text-white transition hover:bg-white/25"
             >
-              Cerrar
+              {cerrar}
             </button>
           </div>
         </div>

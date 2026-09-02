@@ -11,7 +11,10 @@ import { ProjectNav } from "@/components/Sections/Project/ProjectNav";
 import { ProjectShots } from "@/components/Sections/Project/ProjectShots";
 import { SkyArea } from "@/components/SkyArea/SkyArea";
 import { SITE_NAME } from "@/config";
-import { projects } from "@/data/projects";
+import { localePath, type Locale } from "@/i18n/config";
+import { getDictionary } from "@/i18n/dictionaries";
+import { LOCALES } from "@/i18n/config";
+import { getContent, projectSlugs } from "@/data/content";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -20,14 +23,20 @@ import { notFound } from "next/navigation";
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return projects.map((project) => ({ slug: project.slug }));
+  // El segmento de idioma también es dinámico: hay que enumerar la combinación
+  // de los dos, o Next deja las páginas fuera del prerender.
+  return LOCALES.flatMap((lang) =>
+    projectSlugs.map((slug) => ({ lang, slug })),
+  );
 }
 
 export async function generateMetadata(
-  props: PageProps<"/proyectos/[slug]">,
+  props: PageProps<"/[lang]/proyectos/[slug]">,
 ): Promise<Metadata> {
-  const { slug } = await props.params;
-  const project = projects.find((item) => item.slug === slug);
+  const { lang, slug } = await props.params;
+  const project = getContent(lang as Locale).projects.find(
+    (item) => item.slug === slug,
+  );
 
   if (!project) return {};
 
@@ -55,9 +64,12 @@ export async function generateMetadata(
 }
 
 export default async function ProjectPage(
-  props: PageProps<"/proyectos/[slug]">,
+  props: PageProps<"/[lang]/proyectos/[slug]">,
 ) {
-  const { slug } = await props.params;
+  const { lang, slug } = await props.params;
+  const locale = lang as Locale;
+  const t = await getDictionary(locale);
+  const { projects } = getContent(locale);
   const index = projects.findIndex((item) => item.slug === slug);
 
   if (index === -1) notFound();
@@ -69,9 +81,11 @@ export default async function ProjectPage(
   return (
     <>
       {/* Fuera de la home el menú apunta a sus anclas, pero de vuelta en "/" */}
-      <Header navBase="/" />
+      <Header locale={locale} desdeProyecto />
 
       <ProjectHero
+        t={t.proyecto}
+        volverHref={`${localePath(locale)}#proyectos`}
         title={project.title}
         tagline={project.tagline}
         kind={project.kind}
@@ -86,6 +100,7 @@ export default async function ProjectPage(
       {/* Mismo ritmo de fondos que la home: cuadrícula para el contexto... */}
       <LinesArea>
         <ProjectBrief
+          t={t.proyecto}
           summary={project.summary}
           challenge={project.challenge}
           kind={project.kind}
@@ -94,16 +109,28 @@ export default async function ProjectPage(
           team={project.team}
           stack={project.stack}
         />
-        <ProjectContributions contributions={project.contributions} />
+        <ProjectContributions
+          t={t.proyecto}
+          contributions={project.contributions}
+        />
       </LinesArea>
 
       {/* ...y cielo continuo para el cierre. */}
       <SkyArea>
-        <ProjectImpact headline={project.headline} metrics={project.metrics} />
-        <ProjectShots shots={project.shots} />
-        <ProjectLearnings learnings={project.learnings} />
-        <ProjectNav previous={previous} next={next} />
-        <Cta />
+        <ProjectImpact
+          t={t.proyecto}
+          headline={project.headline}
+          metrics={project.metrics}
+        />
+        <ProjectShots t={t.proyecto} shots={project.shots} />
+        <ProjectLearnings t={t.proyecto} learnings={project.learnings} />
+        <ProjectNav
+          t={t.proyecto}
+          locale={locale}
+          previous={previous}
+          next={next}
+        />
+        <Cta locale={locale} />
         <Footer />
       </SkyArea>
     </>

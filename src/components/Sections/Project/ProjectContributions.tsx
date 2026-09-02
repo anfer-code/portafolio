@@ -1,20 +1,23 @@
+import type { Dictionary } from "@/i18n/dictionaries";
 import { CheckIcon } from "@/components/icons/CheckIcon";
-import type { ContributionGroup } from "@/data/projects";
+import type { ContributionGroup } from "@/data/types";
 
 type ProjectContributionsProps = {
+  t: Dictionary["proyecto"];
   contributions: ContributionGroup[];
 };
 
 export const ProjectContributions = ({
+  t,
   contributions,
 }: ProjectContributionsProps) => (
   <section id="lo-que-hice" className="w-full px-6 py-14 sm:py-25">
     <div className="mx-auto max-w-300">
       <h2 className="font-comic text-4xl text-main-text sm:text-5xl">
-        Lo que hice
+        {t.loQueHice}
       </h2>
       <p className="mt-3 max-w-2xl text-lg text-secondary-text">
-        Mi aporte concreto al proyecto, agrupado por frente de trabajo.
+        {t.loQueHiceTexto}
       </p>
 
       <div className="mt-10 grid gap-6 md:grid-cols-2">

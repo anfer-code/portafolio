@@ -1,4 +1,6 @@
-import { notes } from "@/data/notes";
+import type { Locale } from "@/i18n/config";
+import { getDictionary } from "@/i18n/dictionaries";
+import { getContent } from "@/data/content";
 import { stack } from "@/data/stack";
 import { Note } from "./childs/Note";
 import { TechIcon } from "./childs/TechIcon";
@@ -7,13 +9,17 @@ import { TechIcon } from "./childs/TechIcon";
 // así al reiniciarse el bucle es imperceptible.
 const loop = [...stack, ...stack];
 
-export const Stack = () => (
+export const Stack = async ({ locale }: { locale: Locale }) => {
+  const t = await getDictionary(locale);
+  const { notes } = getContent(locale);
+
+  return (
   <section
     id="stack"
     className="w-full py-14 sm:py-25"
   >
     <div className="mx-auto max-w-300 px-6">
-      <h2 className="mb-6 text-2xl font-bold text-main-text">Stack</h2>
+      <h2 className="mb-6 text-2xl font-bold text-main-text">{t.stack.titulo}</h2>
 
       <div className="flex flex-col gap-6 md:flex-row">
         {/* Carril del carrusel: recorta el desborde y el contenido se mueve solo */}
@@ -32,7 +38,7 @@ export const Stack = () => (
         {/* Tablero de notas */}
         <div className="flex flex-1 flex-col gap-4">
           <div className="glass rounded-lg bg-glass px-6 py-4">
-            <h3 className="font-comic text-2xl text-main-text">Notas</h3>
+            <h3 className="font-comic text-2xl text-main-text">{t.stack.notas}</h3>
           </div>
 
           {/* Padding y gap chicos en móvil: en 375px el panel se comía 88 de los
@@ -48,3 +54,4 @@ export const Stack = () => (
     </div>
   </section>
 );
+};

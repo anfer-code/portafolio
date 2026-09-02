@@ -1,11 +1,15 @@
+import type { Locale } from "@/i18n/config";
+import { getDictionary } from "@/i18n/dictionaries";
 import { LinkedinButton } from "@/components/Buttons/LinkedinButton";
 import { ProyectosButton } from "@/components/Buttons/ProyectosButton";
 import { HeroIllustration } from "./childs/HeroIllustration/HeroIllustration";
 
-export const Hero = () => {
+export const Hero = async ({ locale }: { locale: Locale }) => {
+  const t = await getDictionary(locale);
+
   return (
     <section className="relative h-screen w-full overflow-hidden">
-      <HeroIllustration />
+      <HeroIllustration alt={t.hero.ilustracion} />
 
       <div className="relative z-10 mx-auto max-w-6xl px-6 pt-44">
         <div className="max-w-xl">
@@ -13,15 +17,18 @@ export const Hero = () => {
             Anfernee Valera
           </h1>
           <p className="mt-3 text-lg text-secondary-text sm:text-4xl font-medium">
-            Frontend Engineer
+            {t.hero.rol}
           </p>
           <p className="mt-6 text-secondary-text sm:text-2xl">
-            Creo experiencias digitales accesibles y optimizadas, con un diseño
-            impecable y amigable.
+            {t.hero.descripcion}
           </p>
           <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-            <ProyectosButton className="w-full justify-center sm:w-auto sm:justify-start" />
+            <ProyectosButton
+              label={t.hero.verProyectos}
+              href={locale === "es" ? "#proyectos" : "/en#proyectos"}
+              className="w-full justify-center sm:w-auto sm:justify-start" />
             <LinkedinButton
+              label={t.hero.linkedin}
               href="https://www.linkedin.com/in/valeraanfer/"
               className="w-full justify-center sm:w-auto sm:justify-start"
             />

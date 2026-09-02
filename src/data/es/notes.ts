@@ -1,8 +1,4 @@
-export type Note = {
-  title: string;
-  /** Contenido que se muestra al abrir la nota. */
-  body?: string;
-};
+import type { Note } from "../types";
 
 export const notes: Note[] = [
   {
@@ -27,6 +23,6 @@ export const notes: Note[] = [
   },
   {
     title: "Fun facts",
-      body: "La dirección creativa y maqueta del sitio fue hecha junto a @nailimer. La idea nació de evitar tendencias repetitivas hechas con IA y expresar mi gusto personal por el pixel art",
+    body: "Empecé a programar por los videojuegos, era mi sueño desde niño. Ya siendo un adulto, ver un video que explicaba el algoritmo detrás de un combate de Pokémon fue lo que me impulsó a tomar mi primer curso.",
   },
 ];

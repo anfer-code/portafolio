@@ -7,6 +7,8 @@ import {
 } from "@/actions/contact-fields";
 import { sendContactMessage } from "@/actions/contact";
 import { MailButton } from "@/components/Buttons/MailButton";
+import type { Locale } from "@/i18n/config";
+import { getDictionarySync, type Dictionary } from "@/i18n/dictionaries";
 import { CheckIcon } from "@/components/icons/CheckIcon";
 import { loadTurnstile, TURNSTILE_SITE_KEY } from "./turnstile";
 import { useActionState, useEffect, useRef, useState } from "react";
@@ -65,7 +67,7 @@ const Field = ({
   );
 };
 
-const ContactForm = ({ onSent }: { onSent: () => void }) => {
+const ContactForm = ({ onSent, t }: { onSent: () => void; t: Dictionary["contacto"] }) => {
   const [state, formAction, pending] = useActionState(
     sendContactMessage,
     CONTACT_INITIAL_STATE,
@@ -113,16 +115,16 @@ const ContactForm = ({ onSent }: { onSent: () => void }) => {
           className="size-10 text-[#FFDE46] dark:text-[#9B51E0]"
           aria-hidden="true"
         />
-        <p className="text-lg font-bold text-main-text">Mensaje enviado</p>
+        <p className="text-lg font-bold text-main-text">{t.enviado}</p>
         <p className="text-secondary-text">
-          Te respondo al correo que dejaste, normalmente en menos de un día.
+          {t.enviadoTexto}
         </p>
         <button
           type="button"
           onClick={onSent}
           className="mt-2 rounded-lg bg-accent px-6 py-3 font-medium text-accent-text transition hover:brightness-90"
         >
-          Cerrar
+          {t.cerrar}
         </button>
       </div>
     );
@@ -144,22 +146,22 @@ const ContactForm = ({ onSent }: { onSent: () => void }) => {
 
       <Field
         name="name"
-        label="Nombre"
-        placeholder="¿Cómo te llamas?"
+        label={t.nombre}
+        placeholder={t.nombrePlaceholder}
         error={state.errors.name}
         defaultValue={state.values.name}
       />
       <Field
         name="email"
-        label="Correo"
-        placeholder="tu@correo.com"
+        label={t.correo}
+        placeholder={t.correoPlaceholder}
         error={state.errors.email}
         defaultValue={state.values.email}
       />
       <Field
         name="message"
-        label="Mensaje"
-        placeholder="Cuéntame en qué estás pensando."
+        label={t.mensaje}
+        placeholder={t.mensajePlaceholder}
         error={state.errors.message}
         defaultValue={state.values.message}
         multiline
@@ -184,13 +186,14 @@ const ContactForm = ({ onSent }: { onSent: () => void }) => {
         disabled={pending}
         className="mt-2 rounded-lg bg-accent px-7.5 py-4 font-medium text-accent-text transition hover:brightness-90 disabled:cursor-not-allowed disabled:opacity-60"
       >
-        {pending ? "Enviando…" : "Enviar mensaje"}
+        {pending ? t.enviando : t.enviar}
       </button>
     </form>
   );
 };
 
 type ContactDialogProps = {
+  locale: Locale;
   className?: string;
   variant?: "filled" | "outline";
 };
@@ -201,7 +204,8 @@ type ContactDialogProps = {
  * Usa el mismo `<dialog>` nativo que las notas del tablero: trae backdrop,
  * cierre con Escape y foco atrapado sin librerías.
  */
-export const ContactDialog = ({ className, variant }: ContactDialogProps) => {
+export const ContactDialog = ({ locale, className, variant }: ContactDialogProps) => {
+  const t = getDictionarySync(locale);
   const dialogRef = useRef<HTMLDialogElement>(null);
   // Cada apertura remonta el formulario. Sin esto, quien envía un mensaje y
   // vuelve a abrir se encuentra con la pantalla de "enviado" en vez del form:
@@ -225,7 +229,12 @@ export const ContactDialog = ({ className, variant }: ContactDialogProps) => {
 
   return (
     <>
-      <MailButton onClick={open} variant={variant} className={className} />
+      <MailButton
+        label={t.cta.escribir}
+        onClick={open}
+        variant={variant}
+        className={className}
+      />
 
       <dialog
         ref={dialogRef}
@@ -241,17 +250,17 @@ export const ContactDialog = ({ className, variant }: ContactDialogProps) => {
                 id="contacto-titulo"
                 className="font-comic text-3xl text-main-text"
               >
-                Hablemos
+                {t.contacto.titulo}
               </h2>
               <p className="mt-1 text-sm text-secondary-text">
-                Te llega directo a mi bandeja.
+                {t.contacto.subtitulo}
               </p>
             </div>
 
             <button
               type="button"
               onClick={() => dialogRef.current?.close()}
-              aria-label="Cerrar"
+              aria-label={t.contacto.cerrar}
               className="-mt-1 -mr-1 shrink-0 cursor-pointer rounded-lg px-3 py-1 text-2xl leading-none text-secondary-text transition hover:text-main-text"
             >
               ×
@@ -260,6 +269,7 @@ export const ContactDialog = ({ className, variant }: ContactDialogProps) => {
 
           <ContactForm
             key={openCount}
+            t={t.contacto}
             onSent={() => dialogRef.current?.close()}
           />
         </div>

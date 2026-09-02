@@ -1,4 +1,4 @@
-import type { StatAnimation } from "@/data/stats";
+import type { StatAnimation } from "@/data/types";
 import Image from "next/image";
 
 export enum PageType {

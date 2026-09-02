@@ -1,13 +1,15 @@
-import type { Project } from "@/data/projects";
+import type { Dictionary } from "@/i18n/dictionaries";
+import type { Project } from "@/data/types";
 import { ProjectCard } from "./childs/ProjectCard";
 import { TechChip } from "./childs/TechChip";
 
-type ProjectBriefProps = Pick<
+type ProjectBriefProps = { t: Dictionary["proyecto"] } & Pick<
   Project,
   "summary" | "challenge" | "kind" | "role" | "period" | "team" | "stack"
 >;
 
 export const ProjectBrief = ({
+  t,
   summary,
   challenge,
   kind,
@@ -22,16 +24,24 @@ export const ProjectBrief = ({
     <div className="mx-auto grid max-w-300 items-start gap-10 lg:grid-cols-[1fr_minmax(0,24rem)] lg:gap-16">
       <div>
         <h2 className="font-comic text-4xl text-main-text sm:text-5xl">
-          La misión
+          {t.mision}
         </h2>
         <p className="mt-6 text-lg text-secondary-text">{summary}</p>
 
-        <h3 className="mt-10 text-2xl font-bold text-main-text">El reto</h3>
-        <p className="mt-3 text-lg text-secondary-text">{challenge}</p>
+        <h3 className="mt-10 text-2xl font-bold text-main-text">{t.reto}</h3>
+        {challenge
+          .split("\n")
+          .map((parrafo) => parrafo.trim())
+          .filter(Boolean)
+          .map((parrafo) => (
+            <p key={parrafo} className="mt-3 text-lg text-secondary-text">
+              {parrafo}
+            </p>
+          ))}
 
-        <h3 className="mt-10 text-2xl font-bold text-main-text">Stack</h3>
+        <h3 className="mt-10 text-2xl font-bold text-main-text">{t.stack}</h3>
         <p className="mt-3 text-lg text-secondary-text">
-          Las herramientas con las que se construyó el proyecto.
+          {t.stackTexto}
         </p>
         <ul className="mt-6 flex flex-wrap gap-3">
           {stack.map((tech) => (
@@ -40,7 +50,7 @@ export const ProjectBrief = ({
         </ul>
       </div>
 
-      <ProjectCard kind={kind} role={role} period={period} team={team} />
+      <ProjectCard t={t.ficha} kind={kind} role={role} period={period} team={team} />
     </div>
   </section>
 );
